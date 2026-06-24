@@ -14,13 +14,25 @@
 
 ---
 
-## Overview
+## Table of Contents
 
-Place2place bridges the gap between local farmers/producers and end consumers. Producers list fresh products, customers order directly, and distribution centers handle last-mile delivery — all in one platform.
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Features](#features)
+- [Technologies](#technologies)
+- [User Roles](#user-roles)
+- [API Reference](#api-reference)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgements](#acknowledgements)
 
 ---
 
-## Architecture
+## Introduction
+
+Place2place is a full-stack farm-to-consumer marketplace that bridges the gap between local producers and end consumers. It provides a seamless platform where producers can list fresh products like dairy, spices, honey, and eggs, customers can browse and order directly, and distribution centers can manage last-mile delivery — all in one place.
+
+The platform is built with **Next.js** on the frontend and **Express.js with TypeScript** on the backend, with **PostgreSQL** as the database powered by **Prisma ORM**. Authentication is fully passwordless using OTP delivered via email or SMS, and the order system uses a smart producer assignment queue to ensure every order is handled efficiently.
 
 ```
 Place2place/
@@ -32,34 +44,20 @@ Place2place/
 
 ---
 
-## Tech Stack
+## Installation
 
-| | Technology |
-|---|---|
-| **Frontend** | Next.js 16, React 19, Tailwind CSS v4, TypeScript |
-| **Backend** | Express.js, TypeScript, JWT |
-| **Database** | PostgreSQL 14+, Prisma ORM |
-| **Auth** | Passwordless OTP — Email (Gmail) / SMS (Fast2SMS) |
-| **Storage** | Multer — product images & videos |
+To set up and run the project locally, follow these steps:
 
----
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- PostgreSQL 14+
-- npm
-
----
-
-### 1. Clone & Install
+**1. Clone the repository:**
 
 ```bash
 git clone https://github.com/beesumahesh27-hue/Place2place.git
 cd Place2place
+```
 
+**2. Install dependencies:**
+
+```bash
 # Root Prisma client
 npm install
 
@@ -70,15 +68,15 @@ cd server && npm install && cd ..
 cd web && npm install && cd ..
 ```
 
----
+**3. Set up environment variables:**
 
-### 2. Configure Environment
-
-**Server** — copy and fill in `server/.env`:
+For the **server**, create a `.env` file based on the example template:
 
 ```bash
 cp server/.env.example server/.env
 ```
+
+Then fill in the required values in `server/.env`:
 
 ```env
 PORT=4000
@@ -92,11 +90,11 @@ JWT_EXPIRES_IN=7d
 
 OTP_EXPIRES_MINUTES=5
 EMAIL_USER=your-gmail@gmail.com
-EMAIL_PASS=your-gmail-app-password      # Not your real password — use a Gmail App Password
+EMAIL_PASS=your-gmail-app-password      # Use a Gmail App Password, not your real password
 FAST2SMS_API_KEY=your-fast2sms-key
 ```
 
-**Web** — copy and fill in `web/.env.local`:
+For the **web**, create a `.env.local` file:
 
 ```bash
 cp web/.env.local.example web/.env.local
@@ -108,32 +106,30 @@ EMAIL_PASS=your-gmail-app-password
 FAST2SMS_API_KEY=your-fast2sms-key
 ```
 
-> **No keys?** The app runs in dev mode — OTP is printed in the server terminal and shown as a banner in the browser.
+> **No keys?** The app runs in dev mode — the OTP is printed in the server terminal and shown as a banner in the browser. No external service needed to get started.
 
----
-
-### 3. Set Up the Database
+**4. Set up the database:**
 
 ```bash
 cd server
 
-npm run db:migrate    # run migrations
-npm run db:generate   # generate Prisma client
-npm run db:seed       # (optional) seed sample data
+npm run db:migrate    # Run all migrations
+npm run db:generate   # Generate Prisma client
+npm run db:seed       # (Optional) Load sample data
 ```
 
----
+**5. Start the development servers:**
 
-### 4. Run Locally
-
-Open **two terminals**:
+Open two terminals and run:
 
 ```bash
-# Terminal 1 — API
-cd server && npm run dev
+# Terminal 1 — API server
+cd server
+npm run dev
 
-# Terminal 2 — Web
-cd web && npm run dev
+# Terminal 2 — Web frontend
+cd web
+npm run dev
 ```
 
 | Service | URL |
@@ -142,28 +138,75 @@ cd web && npm run dev
 | API | http://localhost:4000 |
 | Health check | http://localhost:4000/health |
 
----
+**6. Build for production:**
 
-## User Roles
+```bash
+# Build the web app
+cd web && npm run build
 
-| Role | Capabilities |
-|---|---|
-| **Customer** | Browse products, cart, checkout, order tracking, address & card management |
-| **Producer** | List products with images/videos, manage inventory, accept or decline orders |
-| **DC** | Manage distribution center profile and delivery assignments |
+# Build the server
+cd server && npm run build
+```
 
 ---
 
 ## Features
 
-- **Passwordless OTP login** via email or SMS
-- **Product catalog** across dairy, spices, honey, eggs, nuts, and more
-- **Cart & checkout** with address selection and payment method
-- **Smart order assignment** — orders are queued to producers by rank; each producer has a time window to accept or decline before the next is notified
-- **Booking system** — producers can schedule visits to apartments and colonies
-- **Real-time notifications** — order updates, stock alerts, assignment requests
-- **Role-based dashboards** — tailored views for each user type
-- **Media uploads** — product images and videos via Multer
+- **Passwordless OTP login:** Users sign in using a one-time password delivered to their email or mobile number — no passwords to remember or manage.
+
+- **Product catalog:** Producers list products across multiple categories including dairy, turmeric, cashews, honey, eggs, snacks, and more, with images and videos.
+
+- **Cart and checkout:** Customers add products to a cart, select a delivery address, choose a payment method, and place orders in a smooth multi-step flow.
+
+- **Smart order assignment queue:** When an order is placed, it is automatically routed to the nearest available producer. Each producer has a set time window to accept or decline before the next one in the queue is notified.
+
+- **Booking system:** Producers can schedule visits to apartment complexes and colonies to sell directly, with time slot selection and status tracking.
+
+- **Real-time notifications:** Users receive in-app alerts for order status updates, low stock warnings, and new order assignment requests.
+
+- **Role-based dashboards:** Each user type — Customer, Producer, and DC — sees a tailored dashboard with relevant actions and data.
+
+- **Media uploads:** Producers can attach product images and videos to their listings to give customers a better view of what they are buying.
+
+- **Secure API:** The backend is protected with JWT authentication, rate limiting, and helmet security headers.
+
+---
+
+## Technologies
+
+- **Next.js:** A React framework for building fast, server-rendered web applications with file-based routing.
+
+- **React.js:** A JavaScript library for building interactive user interfaces with reusable components.
+
+- **TypeScript:** A strongly typed superset of JavaScript that improves code quality and developer experience across both frontend and backend.
+
+- **Tailwind CSS:** A utility-first CSS framework for building modern, responsive UIs directly in markup.
+
+- **Express.js:** A minimal and flexible Node.js web framework used to build the REST API.
+
+- **PostgreSQL:** A powerful open-source relational database used to store all application data.
+
+- **Prisma:** A next-generation ORM for Node.js and TypeScript that simplifies database access and migrations.
+
+- **JSON Web Tokens (JWT):** Used for stateless, secure user authentication after OTP verification.
+
+- **Nodemailer:** Used to send OTP emails via Gmail.
+
+- **Fast2SMS:** An SMS gateway used to deliver OTPs to Indian mobile numbers.
+
+- **Multer:** A Node.js middleware for handling file uploads such as product images and videos.
+
+- **Zod:** A TypeScript-first schema validation library used for request validation in the API.
+
+---
+
+## User Roles
+
+| Role | Description |
+|---|---|
+| **Customer** | Browses products, manages cart, places orders, tracks deliveries, and manages saved addresses and payment cards. |
+| **Producer** | Lists and manages products with images and videos, monitors inventory, and accepts or declines incoming orders. |
+| **DC (Distribution Center)** | Manages the distribution center profile, coverage areas, and handles delivery assignments from producers. |
 
 ---
 
@@ -171,32 +214,42 @@ cd web && npm run dev
 
 **Base URL:** `http://localhost:4000/api/v1`
 
-| Prefix | Description |
+| Endpoint Prefix | Description |
 |---|---|
-| `/auth` | OTP send/verify, JWT |
-| `/products` | Product CRUD |
-| `/orders` | Place and manage orders |
-| `/producers` | Producer profiles and assignments |
-| `/dc` | Distribution center profiles |
-| `/bookings` | Schedule and track visits |
-| `/notifications` | User notifications |
+| `/auth` | OTP send and verify, JWT token management |
+| `/products` | Create, read, update, and delete product listings |
+| `/orders` | Place orders, update order status, view order history |
+| `/producers` | Producer profiles and order assignment handling |
+| `/dc` | Distribution center profile management |
+| `/bookings` | Schedule and manage producer visits |
+| `/notifications` | Fetch and mark user notifications as read |
 
 ---
 
-## Database Commands
+## Contributing
 
-```bash
-cd server
+Contributions are welcome! Please follow these steps to contribute:
 
-npm run db:migrate    # apply migrations
-npm run db:generate   # regenerate Prisma client after schema changes
-npm run db:seed       # load sample data
-npm run db:studio     # open Prisma Studio (visual DB browser)
-npm run db:reset      # wipe and re-run all migrations
-```
+1. Fork the repository.
+2. Create a new branch: `git checkout -b feature/your-feature-name`
+3. Make your changes.
+4. Commit your changes: `git commit -m 'Add your feature description'`
+5. Push to the branch: `git push origin feature/your-feature-name`
+6. Open a Pull Request.
 
 ---
 
 ## License
 
-[MIT](LICENSE)
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Acknowledgements
+
+- **Next.js** — For the powerful React framework with server-side rendering and file-based routing.
+- **Prisma** — For making database access and migrations simple and type-safe.
+- **Tailwind CSS** — For the utility-first approach to building beautiful UIs quickly.
+- **Fast2SMS** — For providing reliable SMS OTP delivery for Indian mobile numbers.
+- **Nodemailer** — For easy and reliable email delivery in Node.js.
+- **Zod** — For robust schema validation that keeps the API safe and predictable.
