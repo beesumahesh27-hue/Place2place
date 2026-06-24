@@ -1,34 +1,52 @@
-# Place2place
+<div align="center">
 
-A full-stack farm-to-consumer marketplace connecting customers, local producers, and distribution centers. Customers browse and order fresh produce; producers manage inventory and fulfill orders; DCs handle last-mile delivery.
+# 🌾 Place2place
+
+**A farm-to-consumer marketplace connecting local producers, customers, and distribution centers.**
+
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![Prisma](https://img.shields.io/badge/Prisma-5-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+
+</div>
+
+---
+
+## Overview
+
+Place2place bridges the gap between local farmers/producers and end consumers. Producers list fresh products, customers order directly, and distribution centers handle last-mile delivery — all in one platform.
+
+---
+
+## Architecture
+
+```
+Place2place/
+├── web/          →  Next.js 16 frontend     (port 3000)
+├── server/       →  Express + TS REST API   (port 4000)
+├── database/     →  Prisma schema + SQL migrations
+└── package.json  →  Root Prisma client
+```
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
+| | Technology |
 |---|---|
-| Frontend | Next.js 16, React 19, Tailwind CSS v4, TypeScript |
-| Backend | Express.js, TypeScript, JWT auth |
-| Database | PostgreSQL, Prisma ORM |
-| Auth | OTP login via Email (Gmail) or SMS (Fast2SMS) |
-| Uploads | Multer (product images & videos) |
+| **Frontend** | Next.js 16, React 19, Tailwind CSS v4, TypeScript |
+| **Backend** | Express.js, TypeScript, JWT |
+| **Database** | PostgreSQL 14+, Prisma ORM |
+| **Auth** | Passwordless OTP — Email (Gmail) / SMS (Fast2SMS) |
+| **Storage** | Multer — product images & videos |
 
 ---
 
-## Project Structure
+## Getting Started
 
-```
-Place2place/
-├── web/          # Next.js frontend  →  http://localhost:3000
-├── server/       # Express API       →  http://localhost:4000
-├── database/     # Prisma schema + SQL migrations
-└── package.json  # Root-level Prisma client
-```
-
----
-
-## Prerequisites
+### Prerequisites
 
 - Node.js 18+
 - PostgreSQL 14+
@@ -36,15 +54,31 @@ Place2place/
 
 ---
 
-## Environment Setup
+### 1. Clone & Install
 
-### Server
+```bash
+git clone https://github.com/beesumahesh27-hue/Place2place.git
+cd Place2place
+
+# Root Prisma client
+npm install
+
+# Backend dependencies
+cd server && npm install && cd ..
+
+# Frontend dependencies
+cd web && npm install && cd ..
+```
+
+---
+
+### 2. Configure Environment
+
+**Server** — copy and fill in `server/.env`:
 
 ```bash
 cp server/.env.example server/.env
 ```
-
-Edit `server/.env`:
 
 ```env
 PORT=4000
@@ -53,124 +87,116 @@ ALLOWED_ORIGINS=http://localhost:3000
 
 DATABASE_URL="postgresql://postgres:password@localhost:5432/place2place"
 
-JWT_SECRET=replace-this-with-a-long-random-secret
+JWT_SECRET=your-long-random-secret
 JWT_EXPIRES_IN=7d
 
 OTP_EXPIRES_MINUTES=5
-
 EMAIL_USER=your-gmail@gmail.com
-EMAIL_PASS=your-16-char-app-password   # Gmail App Password (not your real password)
-
-FAST2SMS_API_KEY=your-fast2sms-api-key
+EMAIL_PASS=your-gmail-app-password      # Not your real password — use a Gmail App Password
+FAST2SMS_API_KEY=your-fast2sms-key
 ```
 
-### Web
+**Web** — copy and fill in `web/.env.local`:
 
 ```bash
 cp web/.env.local.example web/.env.local
 ```
 
-Edit `web/.env.local`:
-
 ```env
 EMAIL_USER=your-gmail@gmail.com
-EMAIL_PASS=your-16-char-app-password
-FAST2SMS_API_KEY=your-fast2sms-api-key
+EMAIL_PASS=your-gmail-app-password
+FAST2SMS_API_KEY=your-fast2sms-key
 ```
 
-> **Dev mode:** If OTP keys are not set, the OTP is printed in the server terminal and shown as a yellow banner in the browser.
+> **No keys?** The app runs in dev mode — OTP is printed in the server terminal and shown as a banner in the browser.
 
 ---
 
-## Database Setup
+### 3. Set Up the Database
 
-```bash
-# Install root dependencies (Prisma client)
-npm install
-
-# Install server dependencies
-cd server && npm install && cd ..
-
-# Run migrations
-cd server && npm run db:migrate
-
-# Generate Prisma client
-npm run db:generate
-
-# (Optional) Seed sample data
-npm run db:seed
-```
-
----
-
-## Running Locally
-
-Open two terminals:
-
-**Terminal 1 — API server**
 ```bash
 cd server
-npm run dev
-# Running at http://localhost:4000
+
+npm run db:migrate    # run migrations
+npm run db:generate   # generate Prisma client
+npm run db:seed       # (optional) seed sample data
 ```
 
-**Terminal 2 — Web frontend**
+---
+
+### 4. Run Locally
+
+Open **two terminals**:
+
 ```bash
-cd web
-npm install   # first time only
-npm run dev
-# Running at http://localhost:3000
+# Terminal 1 — API
+cd server && npm run dev
+
+# Terminal 2 — Web
+cd web && npm run dev
 ```
+
+| Service | URL |
+|---|---|
+| Frontend | http://localhost:3000 |
+| API | http://localhost:4000 |
+| Health check | http://localhost:4000/health |
 
 ---
 
 ## User Roles
 
-| Role | What they do |
+| Role | Capabilities |
 |---|---|
-| **Customer** | Browse products, add to cart, checkout, track orders, manage addresses |
-| **Producer** | List products (dairy, spices, etc.), manage inventory, accept/decline orders |
-| **DC** | Manage distribution center profile, handle delivery assignments |
+| **Customer** | Browse products, cart, checkout, order tracking, address & card management |
+| **Producer** | List products with images/videos, manage inventory, accept or decline orders |
+| **DC** | Manage distribution center profile and delivery assignments |
 
 ---
 
-## Key Features
+## Features
 
-- **OTP authentication** — passwordless login via email or SMS
-- **Product catalog** — categories include dairy, turmeric, cashews, honey, eggs, and more
-- **Cart & checkout** — address selection, payment method, order confirmation
-- **Order assignment queue** — orders are routed to producers by rank; producers accept or decline within a time window
-- **Booking system** — schedule producer visits to apartments or colonies
-- **Notifications** — real-time alerts for order status, stock levels, and assignments
-- **Role dashboards** — separate views for Customer, Producer, and DC users
-- **Image & video uploads** — producers can attach media to product listings
+- **Passwordless OTP login** via email or SMS
+- **Product catalog** across dairy, spices, honey, eggs, nuts, and more
+- **Cart & checkout** with address selection and payment method
+- **Smart order assignment** — orders are queued to producers by rank; each producer has a time window to accept or decline before the next is notified
+- **Booking system** — producers can schedule visits to apartments and colonies
+- **Real-time notifications** — order updates, stock alerts, assignment requests
+- **Role-based dashboards** — tailored views for each user type
+- **Media uploads** — product images and videos via Multer
 
 ---
 
-## Useful Database Commands
+## API Reference
+
+**Base URL:** `http://localhost:4000/api/v1`
+
+| Prefix | Description |
+|---|---|
+| `/auth` | OTP send/verify, JWT |
+| `/products` | Product CRUD |
+| `/orders` | Place and manage orders |
+| `/producers` | Producer profiles and assignments |
+| `/dc` | Distribution center profiles |
+| `/bookings` | Schedule and track visits |
+| `/notifications` | User notifications |
+
+---
+
+## Database Commands
 
 ```bash
 cd server
-npm run db:migrate    # apply new migrations
+
+npm run db:migrate    # apply migrations
 npm run db:generate   # regenerate Prisma client after schema changes
-npm run db:seed       # seed sample data
+npm run db:seed       # load sample data
 npm run db:studio     # open Prisma Studio (visual DB browser)
-npm run db:reset      # reset database and re-run all migrations
+npm run db:reset      # wipe and re-run all migrations
 ```
 
 ---
 
-## API
+## License
 
-Base URL: `http://localhost:4000/api/v1`
-
-Health check: `GET http://localhost:4000/health`
-
-Key route groups:
-- `/auth` — OTP send/verify, JWT refresh
-- `/products` — CRUD for product listings
-- `/orders` — place orders, update status
-- `/producers` — producer profiles and assignments
-- `/dc` — distribution center profiles
-- `/bookings` — schedule and manage visits
-- `/notifications` — read and mark notifications
+[MIT](LICENSE)
