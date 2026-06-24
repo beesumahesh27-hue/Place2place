@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="cs-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"   stop-color="#fdf6ec"/>
+      <stop offset="100%" stop-color="#f5e8d0"/>
+    </linearGradient>
+    <linearGradient id="cs-nut1" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%"   stop-color="#f5dba0"/>
+      <stop offset="50%"  stop-color="#e8c070"/>
+      <stop offset="100%" stop-color="#c8952a"/>
+    </linearGradient>
+    <linearGradient id="cs-nut2" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%"   stop-color="#f0d494"/>
+      <stop offset="50%"  stop-color="#e0b860"/>
+      <stop offset="100%" stop-color="#b88020"/>
+    </linearGradient>
+    <linearGradient id="cs-nut3" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0%"   stop-color="#fae6b0"/>
+      <stop offset="50%"  stop-color="#ecc878"/>
+      <stop offset="100%" stop-color="#d09e38"/>
+    </linearGradient>
+    <filter id="cs-shadow">
+      <feDropShadow dx="2" dy="4" stdDeviation="5" flood-color="#a07020" flood-opacity="0.25"/>
+    </filter>
+    <filter id="cs-glow">
+      <feDropShadow dx="0" dy="0" stdDeviation="12" flood-color="#e8c040" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="400" fill="url(#cs-bg)" rx="24"/>
+
+  <!-- Decorative circle -->
+  <circle cx="200" cy="200" r="160" fill="none" stroke="#e0b840" stroke-width="1" opacity="0.35"/>
+  <circle cx="200" cy="200" r="145" fill="#fdf0d8" opacity="0.45"/>
+
+  <!-- Title text -->
+  <text x="200" y="62" text-anchor="middle"
+        font-family="Georgia, serif" font-size="13" fill="#a07030"
+        font-weight="bold" letter-spacing="3">PREMIUM CASHEWS</text>
+  <line x1="120" y1="70" x2="280" y2="70" stroke="#d4a030" stroke-width="1" opacity="0.6"/>
+
+  <!-- ── CASHEW SHAPE HELPER ──
+       Each cashew is a kidney/crescent path rotated and positioned.
+       Base shape centred at 0,0, about 90×40 px before transform. -->
+
+  <!-- Cashew 1 – large, centre-left, slightly tilted -->
+  <g transform="translate(148,188) rotate(-30)" filter="url(#cs-shadow)">
+    <path d="M-45,0 C-45,-22 -20,-38 12,-32 C44,-26 58,-4 50,18 C42,38 18,44 -8,36 C-28,28 -30,14 -22,6 C-14,-2 0,-4 4,4 C8,12 0,18 -8,18 C-22,18 -32,10 -36,0 C-40,-8 -42,-4 -45,0 Z"
+          fill="url(#cs-nut1)" stroke="#b07820" stroke-width="1"/>
+    <!-- shine -->
+    <ellipse cx="-10" cy="-18" rx="16" ry="7" fill="white" opacity="0.3" transform="rotate(20,-10,-18)"/>
+    <!-- crease line -->
+    <path d="M-22,18 C-10,12 5,10 12,16" stroke="#a06010" stroke-width="1.2" fill="none" opacity="0.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Cashew 2 – large, centre-right, opposite tilt -->
+  <g transform="translate(252,195) rotate(22)" filter="url(#cs-shadow)">
+    <path d="M-45,0 C-45,-22 -20,-38 12,-32 C44,-26 58,-4 50,18 C42,38 18,44 -8,36 C-28,28 -30,14 -22,6 C-14,-2 0,-4 4,4 C8,12 0,18 -8,18 C-22,18 -32,10 -36,0 C-40,-8 -42,-4 -45,0 Z"
+          fill="url(#cs-nut2)" stroke="#b07820" stroke-width="1"/>
+    <ellipse cx="-10" cy="-18" rx="16" ry="7" fill="white" opacity="0.28" transform="rotate(20,-10,-18)"/>
+    <path d="M-22,18 C-10,12 5,10 12,16" stroke="#a06010" stroke-width="1.2" fill="none" opacity="0.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Cashew 3 – top centre, horizontal -->
+  <g transform="translate(200,130) rotate(5)" filter="url(#cs-shadow)">
+    <path d="M-45,0 C-45,-22 -20,-38 12,-32 C44,-26 58,-4 50,18 C42,38 18,44 -8,36 C-28,28 -30,14 -22,6 C-14,-2 0,-4 4,4 C8,12 0,18 -8,18 C-22,18 -32,10 -36,0 C-40,-8 -42,-4 -45,0 Z"
+          fill="url(#cs-nut3)" stroke="#b07820" stroke-width="1"/>
+    <ellipse cx="-10" cy="-18" rx="16" ry="7" fill="white" opacity="0.32" transform="rotate(20,-10,-18)"/>
+    <path d="M-22,18 C-10,12 5,10 12,16" stroke="#a06010" stroke-width="1.2" fill="none" opacity="0.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Cashew 4 – bottom left, steep angle -->
+  <g transform="translate(145,272) rotate(-55)" filter="url(#cs-shadow)">
+    <path d="M-40,0 C-40,-20 -18,-34 10,-28 C38,-22 52,-2 44,16 C36,34 15,40 -7,32 C-24,25 -26,12 -18,5 C-10,-2 2,-4 4,4 C6,10 -1,16 -8,16 C-20,16 -28,8 -32,0 C-36,-8 -38,-4 -40,0 Z"
+          fill="url(#cs-nut1)" stroke="#b07820" stroke-width="1"/>
+    <ellipse cx="-8" cy="-16" rx="14" ry="6" fill="white" opacity="0.28" transform="rotate(18,-8,-16)"/>
+    <path d="M-18,16 C-8,10 5,8 10,14" stroke="#a06010" stroke-width="1.2" fill="none" opacity="0.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Cashew 5 – bottom right, steep angle other way -->
+  <g transform="translate(258,268) rotate(60)" filter="url(#cs-shadow)">
+    <path d="M-40,0 C-40,-20 -18,-34 10,-28 C38,-22 52,-2 44,16 C36,34 15,40 -7,32 C-24,25 -26,12 -18,5 C-10,-2 2,-4 4,4 C6,10 -1,16 -8,16 C-20,16 -28,8 -32,0 C-36,-8 -38,-4 -40,0 Z"
+          fill="url(#cs-nut2)" stroke="#b07820" stroke-width="1"/>
+    <ellipse cx="-8" cy="-16" rx="14" ry="6" fill="white" opacity="0.28" transform="rotate(18,-8,-16)"/>
+    <path d="M-18,16 C-8,10 5,8 10,14" stroke="#a06010" stroke-width="1.2" fill="none" opacity="0.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Cashew 6 – small, far left -->
+  <g transform="translate(95,210) rotate(-70) scale(0.7)" filter="url(#cs-shadow)">
+    <path d="M-40,0 C-40,-20 -18,-34 10,-28 C38,-22 52,-2 44,16 C36,34 15,40 -7,32 C-24,25 -26,12 -18,5 C-10,-2 2,-4 4,4 C6,10 -1,16 -8,16 C-20,16 -28,8 -32,0 C-36,-8 -38,-4 -40,0 Z"
+          fill="url(#cs-nut3)" stroke="#b07820" stroke-width="1.4"/>
+    <ellipse cx="-8" cy="-16" rx="14" ry="6" fill="white" opacity="0.25" transform="rotate(18,-8,-16)"/>
+  </g>
+
+  <!-- Cashew 7 – small, far right -->
+  <g transform="translate(308,215) rotate(80) scale(0.7)" filter="url(#cs-shadow)">
+    <path d="M-40,0 C-40,-20 -18,-34 10,-28 C38,-22 52,-2 44,16 C36,34 15,40 -7,32 C-24,25 -26,12 -18,5 C-10,-2 2,-4 4,4 C6,10 -1,16 -8,16 C-20,16 -28,8 -32,0 C-36,-8 -38,-4 -40,0 Z"
+          fill="url(#cs-nut1)" stroke="#b07820" stroke-width="1.4"/>
+    <ellipse cx="-8" cy="-16" rx="14" ry="6" fill="white" opacity="0.25" transform="rotate(18,-8,-16)"/>
+  </g>
+
+  <!-- Bottom label strip -->
+  <rect x="90" y="330" width="220" height="42" rx="12" fill="#c9a02a" opacity="0.15"/>
+  <rect x="92" y="332" width="216" height="38" rx="11" fill="white" opacity="0.7"/>
+  <text x="200" y="349" text-anchor="middle"
+        font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#7b4a0a" letter-spacing="1.5">W18 GRADE CASHEWS</text>
+  <text x="200" y="364" text-anchor="middle"
+        font-family="Arial, sans-serif" font-size="9" fill="#a07030">Whole · Premium · Konkan Origin</text>
+</svg>

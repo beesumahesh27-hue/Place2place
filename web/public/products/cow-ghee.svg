@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="cg-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fef8ec"/>
+      <stop offset="100%" stop-color="#fde9b8"/>
+    </linearGradient>
+    <linearGradient id="cg-jar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#dfc07a"/>
+      <stop offset="30%"  stop-color="#fdf0cc"/>
+      <stop offset="70%"  stop-color="#f5e4a8"/>
+      <stop offset="100%" stop-color="#c9a02a"/>
+    </linearGradient>
+    <linearGradient id="cg-ghee" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#f8d148"/>
+      <stop offset="100%" stop-color="#c98a08"/>
+    </linearGradient>
+    <linearGradient id="cg-lid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#f0d050"/>
+      <stop offset="100%" stop-color="#a87010"/>
+    </linearGradient>
+    <filter id="cg-shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#c9a02a" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="400" fill="url(#cg-bg)" rx="24"/>
+
+  <!-- Outer glow ring -->
+  <circle cx="200" cy="205" r="155" fill="none" stroke="#e8c040" stroke-width="1" opacity="0.4"/>
+
+  <!-- Bottom shadow -->
+  <ellipse cx="200" cy="372" rx="82" ry="12" fill="#c9a227" opacity="0.18"/>
+
+  <!-- ── JAR BODY ── -->
+  <g filter="url(#cg-shadow)">
+    <path d="M118,162 L118,342 Q118,362 138,362 L262,362 Q282,362 282,342 L282,162 Z"
+          fill="url(#cg-jar)" stroke="#c9a02a" stroke-width="1.5"/>
+  </g>
+
+  <!-- Left shine -->
+  <rect x="118" y="162" width="24" height="180" rx="4"
+        fill="white" opacity="0.18"/>
+  <!-- Right shadow -->
+  <rect x="258" y="162" width="24" height="180" rx="4"
+        fill="#7a5010" opacity="0.12"/>
+
+  <!-- Ghee liquid -->
+  <clipPath id="cg-clip">
+    <path d="M118,162 L118,342 Q118,362 138,362 L262,362 Q282,362 282,342 L282,162 Z"/>
+  </clipPath>
+  <rect x="118" y="240" width="164" height="122" fill="url(#cg-ghee)" clip-path="url(#cg-clip)" opacity="0.88"/>
+  <!-- Ghee surface -->
+  <ellipse cx="200" cy="240" rx="80" ry="10" fill="#f8dc60" opacity="0.65"/>
+  <!-- Ghee shine -->
+  <ellipse cx="172" cy="238" rx="22" ry="5" fill="white" opacity="0.35" transform="rotate(-15,172,238)"/>
+
+  <!-- ── WHITE LABEL ── -->
+  <rect x="130" y="175" width="140" height="128" rx="9"
+        fill="white" opacity="0.94" stroke="#dba820" stroke-width="1.2"/>
+
+  <!-- Decorative top border stripe -->
+  <rect x="130" y="175" width="140" height="14" rx="9" fill="#c9a227"/>
+  <rect x="130" y="182" width="140" height="7" fill="#c9a227"/>
+
+  <!-- Label text -->
+  <text x="200" y="211" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="10" font-weight="bold" fill="#7b4a0a" letter-spacing="2.5">A2 DESI COW</text>
+
+  <line x1="140" y1="217" x2="260" y2="217" stroke="#c9a227" stroke-width="1.2"/>
+
+  <text x="200" y="246" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="28" font-weight="bold" fill="#c9a227" letter-spacing="1">GHEE</text>
+
+  <line x1="140" y1="253" x2="260" y2="253" stroke="#c9a227" stroke-width="1.2"/>
+
+  <text x="200" y="271" text-anchor="middle"
+        font-family="Arial, sans-serif"
+        font-size="8" fill="#aaa" letter-spacing="2">PURE · ORGANIC · NATURAL</text>
+
+  <!-- Bottom label stripe -->
+  <rect x="130" y="289" width="140" height="14" rx="9" fill="#c9a227"/>
+  <rect x="130" y="289" width="140" height="7" fill="#c9a227"/>
+  <text x="200" y="299" text-anchor="middle"
+        font-family="Arial, sans-serif" font-size="8" fill="white" font-weight="bold">500 ml · Farm Fresh</text>
+
+  <!-- ── NECK ── -->
+  <path d="M150,147 L150,164 L250,164 L250,147 Q250,140 243,140 L157,140 Q150,140 150,147 Z"
+        fill="#ecd595" stroke="#c9a02a" stroke-width="1.5"/>
+
+  <!-- ── LID ── -->
+  <!-- Lid base ellipse -->
+  <ellipse cx="200" cy="140" rx="94" ry="19" fill="#b8820c" stroke="#8a600a" stroke-width="1"/>
+  <!-- Lid main body -->
+  <ellipse cx="200" cy="133" rx="90" ry="17" fill="url(#cg-lid)"/>
+  <!-- Lid top flat -->
+  <ellipse cx="200" cy="126" rx="85" ry="14" fill="#e8cc38"/>
+  <!-- Lid highlight -->
+  <ellipse cx="175" cy="123" rx="24" ry="6" fill="white" opacity="0.28" transform="rotate(-18,175,123)"/>
+  <!-- Lid ridge ring -->
+  <ellipse cx="200" cy="140" rx="90" ry="17" fill="none" stroke="#d4a015" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- ── SMALL COW ICON ── -->
+  <!-- Body -->
+  <ellipse cx="199" cy="281" rx="12" ry="8" fill="#f5e8c8"/>
+  <!-- Head -->
+  <circle cx="210" cy="276" r="6.5" fill="#f5e8c8"/>
+  <!-- Left horn -->
+  <path d="M205,271 C203,266 199,264 198,267" stroke="#c9a02a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- Right horn -->
+  <path d="M215,271 C217,266 221,264 222,267" stroke="#c9a02a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- Eye -->
+  <circle cx="213" cy="275" r="1.2" fill="#5c3a10"/>
+  <!-- Nose -->
+  <ellipse cx="214" cy="279" rx="3" ry="2" fill="#e8b8a0"/>
+  <!-- Body spots -->
+  <ellipse cx="195" cy="282" rx="3.5" ry="2.5" fill="#c9a02a" opacity="0.35"/>
+  <ellipse cx="204" cy="286" rx="2.5" ry="2" fill="#c9a02a" opacity="0.3"/>
+</svg>

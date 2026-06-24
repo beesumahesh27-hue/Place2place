@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#EEF6FF"/>
+
+  <!-- Milk splash backdrop -->
+  <ellipse cx="200" cy="310" rx="120" ry="18" fill="#D0E8F5" opacity="0.6"/>
+
+  <!-- Milk bottle body -->
+  <path d="M155 160 L145 320 Q145 335 200 335 Q255 335 255 320 L245 160 Z" fill="white" stroke="#CADDF0" stroke-width="1.5"/>
+
+  <!-- Bottle neck -->
+  <rect x="168" y="120" width="64" height="45" rx="10" fill="white" stroke="#CADDF0" stroke-width="1.5"/>
+
+  <!-- Bottle cap -->
+  <rect x="172" y="100" width="56" height="28" rx="10" fill="#4A9DD4"/>
+  <rect x="176" y="106" width="48" height="6" rx="3" fill="#5BAEE0"/>
+
+  <!-- Milk fill inside bottle -->
+  <path d="M157 200 L148 320 Q148 330 200 330 Q252 330 252 320 L243 200 Z" fill="#FFFCF5"/>
+
+  <!-- Milk level line (top of milk) -->
+  <path d="M157 200 Q200 195 243 200" stroke="#E8F4FF" stroke-width="2" fill="none"/>
+
+  <!-- Highlight on bottle -->
+  <path d="M165 180 Q170 280 168 310" stroke="rgba(255,255,255,0.8)" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+  <!-- Milk droplets/splash -->
+  <!-- Large drop left -->
+  <path d="M120 290 Q115 270 125 255 Q135 240 130 265 Q140 280 120 290 Z" fill="white" stroke="#CADDF0" stroke-width="1"/>
+  <!-- Large drop right -->
+  <path d="M280 285 Q285 265 275 250 Q265 237 270 260 Q260 275 280 285 Z" fill="white" stroke="#CADDF0" stroke-width="1"/>
+  <!-- Small drops -->
+  <circle cx="100" cy="270" r="8" fill="white" stroke="#CADDF0" stroke-width="1"/>
+  <circle cx="305" cy="265" r="7" fill="white" stroke="#CADDF0" stroke-width="1"/>
+  <circle cx="88" cy="295" r="5" fill="white" stroke="#CADDF0" stroke-width="1"/>
+  <circle cx="315" cy="290" r="5" fill="white" stroke="#CADDF0" stroke-width="1"/>
+  <circle cx="140" cy="248" r="4" fill="white" stroke="#CADDF0" stroke-width="1"/>
+  <circle cx="265" cy="245" r="4" fill="white" stroke="#CADDF0" stroke-width="1"/>
+
+  <!-- Label on bottle -->
+  <rect x="158" y="215" width="84" height="80" rx="6" fill="#F0F8FF" stroke="#CADDF0" stroke-width="1"/>
+  <text x="200" y="238" font-family="Arial, sans-serif" font-size="11" fill="#2E7DB5" text-anchor="middle" font-weight="bold">FRESH</text>
+  <text x="200" y="253" font-family="Arial, sans-serif" font-size="15" fill="#1A5C8A" text-anchor="middle" font-weight="bold">MILK</text>
+  <!-- Small cow icon on label -->
+  <text x="200" y="273" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">🐄</text>
+  <text x="200" y="287" font-family="Arial, sans-serif" font-size="8" fill="#5A9CC0" text-anchor="middle">Pure &amp; Natural</text>
+
+  <!-- Bottom label -->
+  <rect x="100" y="348" width="200" height="42" rx="8" fill="#4A9DD4"/>
+  <text x="200" y="367" font-family="Arial, sans-serif" font-size="13" fill="white" text-anchor="middle" font-weight="bold">FRESH COW MILK</text>
+  <text x="200" y="382" font-family="Arial, sans-serif" font-size="9" fill="#D0EEFF" text-anchor="middle">Farm Direct · No Preservatives</text>
+</svg>
