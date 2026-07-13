@@ -1,16 +1,18 @@
 import multer from "multer";
-import path from "path";
 import { v4 as uuid } from "uuid";
 import { Request } from "express";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { cloudinary } from "./cloudinary";
 
-const storage = multer.diskStorage({
-  destination(_req, file, cb) {
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: (_req, file) => {
     const isVideo = file.mimetype.startsWith("video/");
-    cb(null, path.join(process.cwd(), "uploads", isVideo ? "videos" : "images"));
-  },
-  filename(_req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, `${uuid()}${ext}`);
+    return {
+      folder: isVideo ? "place2place/videos" : "place2place/images",
+      resource_type: isVideo ? "video" : "image",
+      public_id: uuid(),
+    };
   },
 });
 
