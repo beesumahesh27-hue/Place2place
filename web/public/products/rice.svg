@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#FEF9EE"/>
+
+  <!-- Wooden bowl -->
+  <ellipse cx="200" cy="270" rx="130" ry="30" fill="#C8A06A"/>
+  <path d="M70 250 Q90 310 200 320 Q310 310 330 250 Z" fill="#D4A84B"/>
+  <path d="M70 250 Q80 260 200 268 Q320 260 330 250" fill="#B8893A" stroke="none"/>
+  <ellipse cx="200" cy="250" rx="130" ry="28" fill="#E5C07A"/>
+
+  <!-- Rice pile in bowl -->
+  <ellipse cx="200" cy="245" rx="112" ry="22" fill="#FFFDF5"/>
+
+  <!-- Rice grains in bowl -->
+  <!-- Row 1 -->
+  <ellipse cx="165" cy="237" rx="10" ry="4" fill="#FFF8E7" transform="rotate(-20 165 237)"/>
+  <ellipse cx="190" cy="233" rx="10" ry="4" fill="#FFFDF5" transform="rotate(5 190 233)"/>
+  <ellipse cx="215" cy="235" rx="10" ry="4" fill="#FFF8E7" transform="rotate(15 215 235)"/>
+  <ellipse cx="240" cy="239" rx="10" ry="4" fill="#FFFDF5" transform="rotate(-10 240 239)"/>
+
+  <!-- Row 2 -->
+  <ellipse cx="155" cy="244" rx="10" ry="4" fill="#FFFDF5" transform="rotate(10 155 244)"/>
+  <ellipse cx="178" cy="241" rx="10" ry="4" fill="#FFF8E7" transform="rotate(-15 178 241)"/>
+  <ellipse cx="202" cy="242" rx="10" ry="4" fill="#FFFDF5" transform="rotate(8 202 242)"/>
+  <ellipse cx="225" cy="241" rx="10" ry="4" fill="#FFF8E7" transform="rotate(-5 225 241)"/>
+  <ellipse cx="248" cy="244" rx="10" ry="4" fill="#FFFDF5" transform="rotate(12 248 244)"/>
+
+  <!-- Row 3 -->
+  <ellipse cx="167" cy="250" rx="10" ry="4" fill="#FFF8E7" transform="rotate(-8 167 250)"/>
+  <ellipse cx="191" cy="249" rx="10" ry="4" fill="#FFFDF5" transform="rotate(18 191 249)"/>
+  <ellipse cx="214" cy="249" rx="10" ry="4" fill="#FFF8E7" transform="rotate(-12 214 249)"/>
+  <ellipse cx="237" cy="251" rx="10" ry="4" fill="#FFFDF5" transform="rotate(6 237 251)"/>
+
+  <!-- Scattered grains outside bowl (decorative) -->
+  <ellipse cx="90" cy="180" rx="9" ry="3.5" fill="#E8D5A0" transform="rotate(30 90 180)"/>
+  <ellipse cx="115" cy="155" rx="9" ry="3.5" fill="#E8D5A0" transform="rotate(-20 115 155)"/>
+  <ellipse cx="300" cy="170" rx="9" ry="3.5" fill="#E8D5A0" transform="rotate(15 300 170)"/>
+  <ellipse cx="320" cy="195" rx="9" ry="3.5" fill="#E8D5A0" transform="rotate(-35 320 195)"/>
+  <ellipse cx="140" cy="140" rx="9" ry="3.5" fill="#E8D5A0" transform="rotate(50 140 140)"/>
+  <ellipse cx="275" cy="145" rx="9" ry="3.5" fill="#E8D5A0" transform="rotate(-10 275 145)"/>
+  <ellipse cx="80" cy="210" rx="9" ry="3.5" fill="#E8D5A0" transform="rotate(40 80 210)"/>
+  <ellipse cx="330" cy="220" rx="9" ry="3.5" fill="#E8D5A0" transform="rotate(-25 330 220)"/>
+
+  <!-- Paddy/wheat stalk -->
+  <line x1="200" y1="220" x2="200" y2="100" stroke="#8B7D3A" stroke-width="2.5"/>
+  <line x1="200" y1="100" x2="185" y2="75" stroke="#8B7D3A" stroke-width="2"/>
+  <line x1="200" y1="110" x2="215" y2="87" stroke="#8B7D3A" stroke-width="2"/>
+  <line x1="200" y1="125" x2="183" y2="103" stroke="#8B7D3A" stroke-width="2"/>
+  <line x1="200" y1="135" x2="217" y2="113" stroke="#8B7D3A" stroke-width="2"/>
+  <line x1="200" y1="148" x2="184" y2="128" stroke="#8B7D3A" stroke-width="2"/>
+  <line x1="200" y1="158" x2="216" y2="138" stroke="#8B7D3A" stroke-width="2"/>
+
+  <!-- Grain pods on stalk -->
+  <ellipse cx="183" cy="73" rx="7" ry="3" fill="#C8B84A" transform="rotate(-30 183 73)"/>
+  <ellipse cx="217" cy="84" rx="7" ry="3" fill="#C8B84A" transform="rotate(30 217 84)"/>
+  <ellipse cx="181" cy="100" rx="7" ry="3" fill="#C8B84A" transform="rotate(-20 181 100)"/>
+  <ellipse cx="218" cy="110" rx="7" ry="3" fill="#C8B84A" transform="rotate(20 218 110)"/>
+  <ellipse cx="182" cy="125" rx="7" ry="3" fill="#D4C050" transform="rotate(-15 182 125)"/>
+  <ellipse cx="218" cy="135" rx="7" ry="3" fill="#D4C050" transform="rotate(15 218 135)"/>
+  <ellipse cx="183" cy="148" rx="7" ry="3" fill="#D4C050" transform="rotate(-10 183 148)"/>
+  <ellipse cx="217" cy="157" rx="7" ry="3" fill="#D4C050" transform="rotate(10 217 157)"/>
+
+  <!-- Label -->
+  <rect x="95" y="310" width="210" height="50" rx="8" fill="#D4A84B"/>
+  <text x="200" y="331" font-family="Georgia, serif" font-size="13" fill="#FFFDF5" text-anchor="middle" font-weight="bold">SONA MASOORI RICE</text>
+  <text x="200" y="350" font-family="Georgia, serif" font-size="10" fill="#FFF8E7" text-anchor="middle">Premium Andhra Variety</text>
+</svg>

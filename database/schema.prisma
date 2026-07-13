@@ -1,0 +1,297 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../server/node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Enums ─────────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  CUSTOMER
+  PRODUCER
+  DC
+}
+
+enum AssignmentStatus {
+  WAITING   // in queue, not yet notified
+  PENDING   // notified, awaiting producer response
+  ACCEPTED
+  DECLINED
+  EXPIRED
+}
+
+enum ProductStatus {
+  AVAILABLE
+  LOW_STOCK
+  OUT_OF_STOCK
+  UPDATING
+}
+
+enum OrderStatus {
+  CONFIRMED
+  PROCESSING
+  PACKED
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+// ── Category ──────────────────────────────────────────────────────────────────
+
+model Category {
+  id       String    @id @default(cuid())
+  slug     String    @unique
+  label    String
+  icon     String
+  products Product[]
+
+  @@map("categories")
+}
+
+// ── User ──────────────────────────────────────────────────────────────────────
+
+model User {
+  id                  String              @id @default(cuid())
+  name                String
+  mobile              String              @unique
+  email               String?             @unique
+  role                UserRole            @default(CUSTOMER)
+  businessName        String?
+  businessLocation    String?
+  latitude            Float?
+  longitude           Float?
+  addresses           Address[]
+  orders              Order[]
+  products            Product[]
+  otps                OtpToken[]
+  producerProfile     ProducerProfile?
+  farmerProfile       FarmerProfile?
+  dcProfile           DCProfile?
+  producerAssignments OrderAssignment[]   @relation("ProducerAssignments")
+  notifications       Notification[]
+  bookings            Booking[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  @@map("users")
+}
+
+// ── ProducerProfile ───────────────────────────────────────────────────────────
+
+model ProducerProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  factoryType     String
+  productsMade    String
+  skuCount        Int      @default(0)
+  established     Int
+  description     String?
+  // Dairy-specific optional fields
+  cattleBreed     String?
+  cowsCount       Int?
+  fssaiCertified  Boolean?
+  // Spice mill / turmeric optional fields
+  grindingMethod  String?
+  curcuminContent String?
+  millCapacity    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("producer_profiles")
+}
+
+// ── FarmerProfile ─────────────────────────────────────────────────────────────
+
+model FarmerProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  crops     String
+  acres     Float    @default(0)
+  organic   Boolean  @default(false)
+  farmSince Int
+  village   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("farmer_profiles")
+}
+
+// ── DCProfile ─────────────────────────────────────────────────────────────────
+
+model DCProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coverageAreas  String
+  operatingHours String
+  riderCount     Int      @default(0)
+  capacity       String   @default("0/day")
+  coldStorage    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("dc_profiles")
+}
+
+// ── Product ───────────────────────────────────────────────────────────────────
+
+model Product {
+  id           String        @id @default(cuid())
+  name         String
+  description  String
+  price        Float
+  unit         String
+  variants     String[]
+  images       String[]
+  videos       String[]
+  quantity     Int           @default(0)
+  status       ProductStatus @default(AVAILABLE)
+  deliveryTime String
+  organic      Boolean       @default(false)
+  categoryId   String
+  producerId   String
+  category     Category      @relation(fields: [categoryId], references: [id])
+  producer     User          @relation(fields: [producerId], references: [id])
+  orderItems   OrderItem[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@map("products")
+}
+
+// ── Address ───────────────────────────────────────────────────────────────────
+
+model Address {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String
+  line1     String
+  line2     String?
+  city      String
+  state     String
+  pincode   String
+  latitude  Float?
+  longitude Float?
+  isDefault Boolean @default(false)
+  orders    Order[]
+
+  @@map("addresses")
+}
+
+// ── OTP ───────────────────────────────────────────────────────────────────────
+
+model OtpToken {
+  id        String   @id @default(cuid())
+  contact   String
+  otp       String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([contact, used])
+  @@map("otp_tokens")
+}
+
+// ── Order ─────────────────────────────────────────────────────────────────────
+
+model Order {
+  id            String            @id @default(cuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [id])
+  addressId     String?
+  address       Address?          @relation(fields: [addressId], references: [id])
+  items         OrderItem[]
+  assignments   OrderAssignment[]
+  total         Float
+  status        OrderStatus       @default(CONFIRMED)
+  paymentMethod String
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@map("orders")
+}
+
+// ── OrderAssignment ───────────────────────────────────────────────────────────
+
+model OrderAssignment {
+  id          String           @id @default(cuid())
+  orderId     String
+  producerId  String
+  rank        Int
+  status      AssignmentStatus @default(WAITING)
+  notifiedAt  DateTime?
+  expiresAt   DateTime?
+  respondedAt DateTime?
+  createdAt   DateTime         @default(now())
+
+  order    Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  producer User  @relation("ProducerAssignments", fields: [producerId], references: [id])
+
+  @@unique([orderId, producerId])
+  @@map("order_assignments")
+}
+
+model OrderItem {
+  id         String  @id @default(cuid())
+  orderId    String
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product @relation(fields: [productId], references: [id])
+  variant    String
+  quantity   Int
+  price      Float
+  accepted   Boolean @default(false)
+
+  @@map("order_items")
+}
+
+// ── Booking ───────────────────────────────────────────────────────────────────
+
+model Booking {
+  id            String   @id @default(cuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  role          String   // "apartment" | "colony"
+  apartmentName String
+  address       String
+  contactName   String
+  mobile        String
+  date          DateTime
+  timeSlot      String
+  status        String   @default("PENDING") // PENDING | CONFIRMED | COMPLETED | CANCELLED
+  itemsSold     Int?
+  feedback      String?
+  outcome       String?  // "Good" | "Average" | "Bad"
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([mobile])
+  @@index([userId])
+  @@map("bookings")
+}
+
+// ── Notification ──────────────────────────────────────────────────────────────
+
+model Notification {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String   // order_placed | order_accepted | order_shipped | order_delivered | stock_low | stock_out
+  title       String
+  message     String
+  referenceId String?  // orderId or productId
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([userId, read])
+  @@map("notifications")
+}
