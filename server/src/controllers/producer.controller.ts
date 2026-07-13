@@ -52,8 +52,8 @@ export async function addProduct(req: AuthRequest, res: Response) {
     if (!parsed.success) return badRequest(res, parsed.error.errors.map((e) => e.message).join(", "));
 
     const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
-    const images = (files?.images ?? []).map((f) => `/uploads/images/${f.filename}`);
-    const videos = (files?.videos ?? []).map((f) => `/uploads/videos/${f.filename}`);
+    const images = (files?.images ?? []).map((f) => f.path);
+    const videos = (files?.videos ?? []).map((f) => f.path);
 
     const product = await createProduct({
       ...parsed.data,
@@ -76,8 +76,8 @@ export async function editProduct(req: AuthRequest, res: Response) {
     const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
     const updates: Record<string, unknown> = { ...parsed.data };
 
-    if (files?.images?.length) updates.images = files.images.map((f) => `/uploads/images/${f.filename}`);
-    if (files?.videos?.length) updates.videos = files.videos.map((f) => `/uploads/videos/${f.filename}`);
+    if (files?.images?.length) updates.images = files.images.map((f) => f.path);
+    if (files?.videos?.length) updates.videos = files.videos.map((f) => f.path);
 
     const product = await updateProduct(req.params.id, req.userId!, updates);
     if (!product) return notFound(res, "Product not found or not yours");
