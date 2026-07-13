@@ -12,6 +12,10 @@ import { useAuth } from "@/context/AuthContext";
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 const MEDIA = "http://localhost:4000";
 
+function mediaSrc(src: string) {
+  return src.startsWith("/uploads") ? `${MEDIA}${src}` : src;
+}
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type Stats = { totalProducts: number; totalOrders: number; totalRevenue: number; totalStock: number };
@@ -460,7 +464,7 @@ export default function ProducerDashboard() {
                     {products.map((p) => (
                       <div key={p.id} className="flex gap-4 items-center border-b border-white/40 p-4 last:border-b-0">
                         {p.images[0] ? (
-                          <img src={`${MEDIA}${p.images[0]}`} alt={p.name}
+                          <img src={mediaSrc(p.images[0])} alt={p.name}
                             className="w-16 h-16 object-cover rounded-2xl shrink-0 ring-1 ring-white/60 shadow-sm" />
                         ) : (
                           <div className="w-16 h-16 rounded-2xl shrink-0 flex items-center justify-center bg-[linear-gradient(135deg,rgba(23,52,39,0.10),rgba(201,162,39,0.14))]">
@@ -628,7 +632,7 @@ export default function ProducerDashboard() {
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-3">
                                 {row.image ? (
-                                  <img src={`${MEDIA}${row.image}`} alt={row.name} className="w-9 h-9 rounded-xl object-cover shrink-0 ring-1 ring-white/60" />
+                                  <img src={mediaSrc(row.image)} alt={row.name} className="w-9 h-9 rounded-xl object-cover shrink-0 ring-1 ring-white/60" />
                                 ) : (
                                   <div className="w-9 h-9 rounded-xl bg-[linear-gradient(135deg,rgba(23,52,39,0.10),rgba(201,162,39,0.14))] flex items-center justify-center shrink-0">
                                     <Package className="w-4 h-4 text-[#173427]/40" />
@@ -721,7 +725,7 @@ export default function ProducerDashboard() {
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-3">
                                 {row.image ? (
-                                  <img src={`${MEDIA}${row.image}`} alt={row.name} className="w-9 h-9 rounded-xl object-cover shrink-0 ring-1 ring-white/60" />
+                                  <img src={mediaSrc(row.image)} alt={row.name} className="w-9 h-9 rounded-xl object-cover shrink-0 ring-1 ring-white/60" />
                                 ) : (
                                   <div className="w-9 h-9 rounded-xl bg-[linear-gradient(135deg,rgba(23,52,39,0.10),rgba(201,162,39,0.14))] flex items-center justify-center shrink-0">
                                     <Package className="w-4 h-4 text-[#173427]/40" />
