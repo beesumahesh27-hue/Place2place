@@ -253,4 +253,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - **Fast2SMS** — For providing reliable SMS OTP delivery for Indian mobile numbers.
 - **Nodemailer** — For easy and reliable email delivery in Node.js.
 - **Zod** — For robust schema validation that keeps the API safe and predictable.
-
