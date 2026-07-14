@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { Smartphone } from "lucide-react";
+import { Mail } from "lucide-react";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 
@@ -39,7 +39,7 @@ export default function LoginPage() {
   const { login } = useAuth();
 
   const [step, setStep]             = useState<Step>("mobile");
-  const [mobile, setMobile]         = useState("");
+  const [email, setEmail]           = useState("");
   const [otpValues, setOtpValues]   = useState(["", "", "", "", "", ""]);
   const [tempToken, setTempToken]   = useState("");
   const [devOtp, setDevOtp]         = useState("");
@@ -88,9 +88,9 @@ export default function LoginPage() {
 
   // Step 1 → send OTP
   async function handleSendOtp() {
-    if (!/^[6-9]\d{9}$/.test(mobile)) { setError("Enter a valid 10-digit mobile number"); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError("Enter a valid email address"); return; }
     setError(""); setLoading(true); setDevOtp(""); setOtpValues(["", "", "", "", "", ""]);
-    const { ok, data } = await post("/auth/send-otp", { mobile, type: "phone" }).catch(() => ({ ok: false, data: { message: "Network error" } }));
+    const { ok, data } = await post("/auth/send-otp", { contact: email, type: "email" }).catch(() => ({ ok: false, data: { message: "Network error" } }));
     setLoading(false);
     if (!ok) { setError(data.message ?? "Failed to send OTP"); return; }
     if (data.data?.devOtp) setDevOtp(data.data.devOtp);
@@ -101,7 +101,7 @@ export default function LoginPage() {
   async function handleVerifyOtp() {
     if (otp.length < 6) { setError("Enter the full 6-digit OTP"); return; }
     setError(""); setLoading(true);
-    const { ok, data } = await post("/auth/verify-otp", { mobile, otp }).catch(() => ({ ok: false, data: { message: "Network error" } }));
+    const { ok, data } = await post("/auth/verify-otp", { contact: email, otp }).catch(() => ({ ok: false, data: { message: "Network error" } }));
     setLoading(false);
     if (!ok) { setError(data.message ?? "Verification failed"); return; }
 
@@ -171,7 +171,7 @@ export default function LoginPage() {
   }
 
   const stepTitles: Record<Step, string> = { mobile: "Welcome back", otp: "Verify OTP", profile: "Create your account" };
-  const stepSubs: Record<Step, string>   = { mobile: "Sign in or register with OTP", otp: `Code sent to +91 ${mobile}`, profile: "Tell us about yourself" };
+  const stepSubs: Record<Step, string>   = { mobile: "Sign in or register with OTP", otp: `Code sent to ${email}`, profile: "Tell us about yourself" };
 
   return (
     <div className="min-h-screen bg-[#f8f4ed] flex items-center justify-center p-4">
@@ -202,18 +202,18 @@ export default function LoginPage() {
 
         {error && <p className="bg-red-50 border border-red-200 text-red-600 text-xs rounded-xl px-4 py-2.5 mb-4 text-center">⚠ {error}</p>}
 
-        {/* STEP 1 — Mobile */}
+        {/* STEP 1 — Email */}
         {step === "mobile" && (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Mobile Number</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
               <div className="flex">
                 <span className="border border-r-0 border-gray-200 rounded-l-xl px-3 flex items-center text-sm text-gray-500 bg-[#f8f4ed]">
-                  <Smartphone className="w-4 h-4 mr-1" /> +91
+                  <Mail className="w-4 h-4" />
                 </span>
-                <input type="tel" value={mobile} onChange={(e) => { setMobile(e.target.value.replace(/\D/g, "").slice(0, 10)); setError(""); }}
+                <input type="email" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }}
                   onKeyDown={(e) => e.key === "Enter" && handleSendOtp()}
-                  placeholder="9876543210" maxLength={10}
+                  placeholder="you@example.com"
                   className="flex-1 border border-gray-200 rounded-r-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
               </div>
             </div>
@@ -251,7 +251,7 @@ export default function LoginPage() {
             </button>
             <div className="flex items-center justify-between text-sm">
               <button onClick={() => { setStep("mobile"); setOtpValues(["","","","","",""]); setError(""); setDevOtp(""); }}
-                className="text-gray-500 hover:text-[#1c3a2a]">← Change number</button>
+                className="text-gray-500 hover:text-[#1c3a2a]">← Change email</button>
               <button onClick={handleSendOtp} disabled={loading} className="text-[#1c3a2a] font-semibold hover:underline disabled:opacity-50">Resend OTP</button>
             </div>
           </div>
@@ -260,7 +260,7 @@ export default function LoginPage() {
         {/* STEP 3 — Profile (new users only) */}
         {step === "profile" && (
           <div className="space-y-4">
-            <p className="text-xs text-center bg-green-50 py-2 rounded-xl text-green-700 font-semibold">✓ +91 {mobile} verified</p>
+            <p className="text-xs text-center bg-green-50 py-2 rounded-xl text-green-700 font-semibold">✓ {email} verified</p>
 
             {/* Name */}
             <div>
