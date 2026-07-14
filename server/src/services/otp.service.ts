@@ -24,7 +24,7 @@ export async function createAndSendOtp(
     if (env.isDev && !env.FAST2SMS_API_KEY) return { devOtp: otp };
     await sendSms(contact, otp);
   } else {
-    if (env.isDev && !env.RESEND_API_KEY) return { devOtp: otp };
+    if (env.isDev && !env.BREVO_API_KEY) return { devOtp: otp };
     await sendEmail(contact, otp);
   }
 
@@ -51,14 +51,14 @@ async function sendSms(mobile: string, otp: string): Promise<void> {
 }
 
 async function sendEmail(email: string, otp: string): Promise<void> {
-  const res = await fetch("https://api.resend.com/emails", {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
-    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+    headers: { "api-key": env.BREVO_API_KEY!, "Content-Type": "application/json", accept: "application/json" },
     body: JSON.stringify({
-      from: env.RESEND_FROM_EMAIL,
-      to: [email],
+      sender: { name: env.BREVO_SENDER_NAME, email: env.BREVO_SENDER_EMAIL },
+      to: [{ email }],
       subject: "Your Place2Place OTP",
-      html: `
+      htmlContent: `
         <div style="font-family:sans-serif;max-width:420px;margin:auto;padding:24px;border:1px solid #ede8df;border-radius:16px">
           <h2 style="color:#1c3a2a">Your OTP</h2>
           <p style="color:#555">Use the code below to sign in. It expires in ${env.OTP_EXPIRES_MINUTES} minutes.</p>
@@ -72,6 +72,6 @@ async function sendEmail(email: string, otp: string): Promise<void> {
   });
   if (!res.ok) {
     const data = (await res.json().catch(() => ({}))) as { message?: string };
-    throw new Error(data.message ?? "Resend: failed to send email");
+    throw new Error(data.message ?? "Brevo: failed to send email");
   }
 }
