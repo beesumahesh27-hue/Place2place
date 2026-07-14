@@ -1,4 +1,3 @@
-import nodemailer from "nodemailer";
 import { prisma } from "../config/database";
 import { env } from "../config/env";
 
@@ -25,7 +24,7 @@ export async function createAndSendOtp(
     if (env.isDev && !env.FAST2SMS_API_KEY) return { devOtp: otp };
     await sendSms(contact, otp);
   } else {
-    if (env.isDev && (!env.EMAIL_USER || !env.EMAIL_PASS)) return { devOtp: otp };
+    if (env.isDev && !env.RESEND_API_KEY) return { devOtp: otp };
     await sendEmail(contact, otp);
   }
 
@@ -52,23 +51,27 @@ async function sendSms(mobile: string, otp: string): Promise<void> {
 }
 
 async function sendEmail(email: string, otp: string): Promise<void> {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: { user: env.EMAIL_USER, pass: env.EMAIL_PASS },
-  });
-  await transporter.sendMail({
-    from: `"Place2Place" <${env.EMAIL_USER}>`,
-    to: email,
-    subject: "Your Place2Place OTP",
-    html: `
-      <div style="font-family:sans-serif;max-width:420px;margin:auto;padding:24px;border:1px solid #ede8df;border-radius:16px">
-        <h2 style="color:#1c3a2a">Your OTP</h2>
-        <p style="color:#555">Use the code below to sign in. It expires in ${env.OTP_EXPIRES_MINUTES} minutes.</p>
-        <div style="background:#f8f4ed;border-radius:12px;padding:20px;text-align:center">
-          <span style="font-size:36px;font-weight:700;letter-spacing:12px;color:#1c3a2a">${otp}</span>
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from: env.RESEND_FROM_EMAIL,
+      to: [email],
+      subject: "Your Place2Place OTP",
+      html: `
+        <div style="font-family:sans-serif;max-width:420px;margin:auto;padding:24px;border:1px solid #ede8df;border-radius:16px">
+          <h2 style="color:#1c3a2a">Your OTP</h2>
+          <p style="color:#555">Use the code below to sign in. It expires in ${env.OTP_EXPIRES_MINUTES} minutes.</p>
+          <div style="background:#f8f4ed;border-radius:12px;padding:20px;text-align:center">
+            <span style="font-size:36px;font-weight:700;letter-spacing:12px;color:#1c3a2a">${otp}</span>
+          </div>
+          <p style="color:#aaa;font-size:12px;margin-top:20px">Do not share this OTP with anyone.</p>
         </div>
-        <p style="color:#aaa;font-size:12px;margin-top:20px">Do not share this OTP with anyone.</p>
-      </div>
-    `,
+      `,
+    }),
   });
+  if (!res.ok) {
+    const data = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new Error(data.message ?? "Resend: failed to send email");
+  }
 }
