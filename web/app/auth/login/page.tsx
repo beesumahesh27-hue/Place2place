@@ -111,7 +111,7 @@ export default function LoginPage() {
       redirectByRole(data.data.user.role);
     } else {
       // New user → store temp token, go to profile
-      setTempToken(data.data.tempToken);
+      setTempToken(data.data.token);
       setStep("profile");
     }
   }
@@ -211,7 +211,7 @@ export default function LoginPage() {
                 <span className="border border-r-0 border-gray-200 rounded-l-xl px-3 flex items-center text-sm text-gray-500 bg-[#f8f4ed]">
                   <Mail className="w-4 h-4" />
                 </span>
-                <input type="email" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }}
+                <input type="email" name="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }}
                   onKeyDown={(e) => e.key === "Enter" && handleSendOtp()}
                   placeholder="you@example.com"
                   className="flex-1 border border-gray-200 rounded-r-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
