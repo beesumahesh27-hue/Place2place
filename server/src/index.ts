@@ -34,6 +34,18 @@ app.get("/health/db", async (_req, res) => {
   }
 });
 
+// TEMPORARY diagnostic — remove once the Brevo "Key not found" issue is confirmed fixed.
+app.get("/health/email-config", (_req, res) => {
+  const key = env.BREVO_API_KEY;
+  res.json({
+    hasBrevoKey: !!key,
+    brevoKeyLength: key?.length ?? 0,
+    brevoKeyLast4: key ? key.slice(-4) : null,
+    brevoSenderEmail: env.BREVO_SENDER_EMAIL,
+    nodeEnv: env.NODE_ENV,
+  });
+});
+
 // ── API routes ────────────────────────────────────────────────────────────────
 app.use("/api/v1", routes);
 
