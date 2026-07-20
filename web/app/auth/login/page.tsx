@@ -204,25 +204,24 @@ export default function LoginPage() {
 
         {/* STEP 1 — Email */}
         {step === "mobile" && (
-          <div className="space-y-4">
+          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSendOtp(); }}>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
               <div className="flex">
                 <span className="border border-r-0 border-gray-200 rounded-l-xl px-3 flex items-center text-sm text-gray-500 bg-[#f8f4ed]">
                   <Mail className="w-4 h-4" />
                 </span>
-                <input type="email" name="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }}
-                  onKeyDown={(e) => e.key === "Enter" && handleSendOtp()}
+                <input id="email" type="email" name="email" autoComplete="email" required value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }}
                   placeholder="you@example.com"
                   className="flex-1 border border-gray-200 rounded-r-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
               </div>
             </div>
-            <button onClick={handleSendOtp} disabled={loading}
+            <button type="submit" disabled={loading}
               className="w-full bg-[#1c3a2a] text-white font-bold py-3.5 rounded-xl hover:bg-[#2d5a3d] transition-colors disabled:opacity-60 flex items-center justify-center gap-2">
               {loading && <Spinner />}{loading ? "Sending OTP…" : "Send OTP →"}
             </button>
             <p className="text-center text-xs text-gray-400">New user? An account will be created automatically.</p>
-          </div>
+          </form>
         )}
 
         {/* STEP 2 — OTP */}
