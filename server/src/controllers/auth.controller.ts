@@ -15,7 +15,7 @@ export async function sendOtp(req: Request, res: Response) {
     return ok(res, result.devOtp ? { devOtp: result.devOtp } : undefined, "OTP sent");
   } catch (err) {
     logger.error("sendOtp", err);
-    return serverError(res, (err as Error).message);
+    return serverError(res, "Failed to send OTP, please try again");
   }
 }
 

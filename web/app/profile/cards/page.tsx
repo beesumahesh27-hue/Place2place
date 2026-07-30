@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import { CreditCard, Plus, Trash2 } from "lucide-react";
 
 const SAMPLE = [
@@ -8,7 +10,15 @@ const SAMPLE = [
 ];
 
 export default function CardsPage() {
+  const { isLoggedIn } = useAuth();
+  const router = useRouter();
   const [cards, setCards] = useState(SAMPLE);
+
+  useEffect(() => {
+    if (!isLoggedIn) router.push("/auth/login");
+  }, [isLoggedIn, router]);
+
+  if (!isLoggedIn) return null;
 
   return (
     <div className="min-h-screen bg-[#f8f4ed] py-8 px-4">

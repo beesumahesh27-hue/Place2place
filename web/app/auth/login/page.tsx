@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { Smartphone } from "lucide-react";
+import { Mail } from "lucide-react";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 
@@ -39,7 +39,7 @@ export default function LoginPage() {
   const { login } = useAuth();
 
   const [step, setStep]             = useState<Step>("mobile");
-  const [mobile, setMobile]         = useState("");
+  const [email, setEmail]           = useState("");
   const [otpValues, setOtpValues]   = useState(["", "", "", "", "", ""]);
   const [tempToken, setTempToken]   = useState("");
   const [devOtp, setDevOtp]         = useState("");
@@ -88,9 +88,9 @@ export default function LoginPage() {
 
   // Step 1 → send OTP
   async function handleSendOtp() {
-    if (!/^[6-9]\d{9}$/.test(mobile)) { setError("Enter a valid 10-digit mobile number"); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError("Enter a valid email address"); return; }
     setError(""); setLoading(true); setDevOtp(""); setOtpValues(["", "", "", "", "", ""]);
-    const { ok, data } = await post("/auth/send-otp", { mobile, type: "phone" }).catch(() => ({ ok: false, data: { message: "Network error" } }));
+    const { ok, data } = await post("/auth/send-otp", { contact: email, type: "email" }).catch(() => ({ ok: false, data: { message: "Network error" } }));
     setLoading(false);
     if (!ok) { setError(data.message ?? "Failed to send OTP"); return; }
     if (data.data?.devOtp) setDevOtp(data.data.devOtp);
@@ -101,7 +101,7 @@ export default function LoginPage() {
   async function handleVerifyOtp() {
     if (otp.length < 6) { setError("Enter the full 6-digit OTP"); return; }
     setError(""); setLoading(true);
-    const { ok, data } = await post("/auth/verify-otp", { mobile, otp }).catch(() => ({ ok: false, data: { message: "Network error" } }));
+    const { ok, data } = await post("/auth/verify-otp", { contact: email, otp }).catch(() => ({ ok: false, data: { message: "Network error" } }));
     setLoading(false);
     if (!ok) { setError(data.message ?? "Verification failed"); return; }
 
@@ -111,7 +111,7 @@ export default function LoginPage() {
       redirectByRole(data.data.user.role);
     } else {
       // New user → store temp token, go to profile
-      setTempToken(data.data.tempToken);
+      setTempToken(data.data.token);
       setStep("profile");
     }
   }
@@ -119,7 +119,7 @@ export default function LoginPage() {
   // Step 3 → complete profile
   async function handleCompleteProfile() {
     if (!name.trim()) { setError("Full name is required"); return; }
-    if (needsBusiness && !businessName.trim()) { setError("Business / farm name is required"); return; }
+    if (needsBusiness && role !== "FARMER" && !businessName.trim()) { setError("Business name is required"); return; }
     if (needsBusiness && !businessLocation.trim()) { setError("Location is required"); return; }
     if (role === "PRODUCER") {
       if (!productsMade.trim()) { setError("Products made is required"); return; }
@@ -133,7 +133,10 @@ export default function LoginPage() {
     // FARMER registers as PRODUCER in the backend
     const backendRole = role === "FARMER" ? "PRODUCER" : role;
     const body: Record<string, string | number> = { name: name.trim(), role: backendRole };
-    if (needsBusiness) { body.businessName = businessName.trim(); body.businessLocation = businessLocation.trim(); }
+    if (needsBusiness) {
+      if (role !== "FARMER") body.businessName = businessName.trim();
+      body.businessLocation = businessLocation.trim();
+    }
     if (role === "PRODUCER") {
       body.factoryType  = factoryType;
       body.productsMade = productsMade.trim();
@@ -171,7 +174,7 @@ export default function LoginPage() {
   }
 
   const stepTitles: Record<Step, string> = { mobile: "Welcome back", otp: "Verify OTP", profile: "Create your account" };
-  const stepSubs: Record<Step, string>   = { mobile: "Sign in or register with OTP", otp: `Code sent to +91 ${mobile}`, profile: "Tell us about yourself" };
+  const stepSubs: Record<Step, string>   = { mobile: "Sign in or register with OTP", otp: `Code sent to ${email}`, profile: "Tell us about yourself" };
 
   return (
     <div className="min-h-screen bg-[#f8f4ed] flex items-center justify-center p-4">
@@ -202,27 +205,26 @@ export default function LoginPage() {
 
         {error && <p className="bg-red-50 border border-red-200 text-red-600 text-xs rounded-xl px-4 py-2.5 mb-4 text-center">⚠ {error}</p>}
 
-        {/* STEP 1 — Mobile */}
+        {/* STEP 1 — Email */}
         {step === "mobile" && (
-          <div className="space-y-4">
+          <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSendOtp(); }}>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Mobile Number</label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
               <div className="flex">
                 <span className="border border-r-0 border-gray-200 rounded-l-xl px-3 flex items-center text-sm text-gray-500 bg-[#f8f4ed]">
-                  <Smartphone className="w-4 h-4 mr-1" /> +91
+                  <Mail className="w-4 h-4" />
                 </span>
-                <input type="tel" value={mobile} onChange={(e) => { setMobile(e.target.value.replace(/\D/g, "").slice(0, 10)); setError(""); }}
-                  onKeyDown={(e) => e.key === "Enter" && handleSendOtp()}
-                  placeholder="9876543210" maxLength={10}
+                <input id="email" type="email" name="email" autoComplete="email" required value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }}
+                  placeholder="you@example.com"
                   className="flex-1 border border-gray-200 rounded-r-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
               </div>
             </div>
-            <button onClick={handleSendOtp} disabled={loading}
+            <button type="submit" disabled={loading}
               className="w-full bg-[#1c3a2a] text-white font-bold py-3.5 rounded-xl hover:bg-[#2d5a3d] transition-colors disabled:opacity-60 flex items-center justify-center gap-2">
               {loading && <Spinner />}{loading ? "Sending OTP…" : "Send OTP →"}
             </button>
             <p className="text-center text-xs text-gray-400">New user? An account will be created automatically.</p>
-          </div>
+          </form>
         )}
 
         {/* STEP 2 — OTP */}
@@ -251,7 +253,7 @@ export default function LoginPage() {
             </button>
             <div className="flex items-center justify-between text-sm">
               <button onClick={() => { setStep("mobile"); setOtpValues(["","","","","",""]); setError(""); setDevOtp(""); }}
-                className="text-gray-500 hover:text-[#1c3a2a]">← Change number</button>
+                className="text-gray-500 hover:text-[#1c3a2a]">← Change email</button>
               <button onClick={handleSendOtp} disabled={loading} className="text-[#1c3a2a] font-semibold hover:underline disabled:opacity-50">Resend OTP</button>
             </div>
           </div>
@@ -260,7 +262,7 @@ export default function LoginPage() {
         {/* STEP 3 — Profile (new users only) */}
         {step === "profile" && (
           <div className="space-y-4">
-            <p className="text-xs text-center bg-green-50 py-2 rounded-xl text-green-700 font-semibold">✓ +91 {mobile} verified</p>
+            <p className="text-xs text-center bg-green-50 py-2 rounded-xl text-green-700 font-semibold">✓ {email} verified</p>
 
             {/* Name */}
             <div>
@@ -292,14 +294,20 @@ export default function LoginPage() {
             {/* Business fields (Producer / DC only) */}
             {needsBusiness && (
               <>
+                {role !== "FARMER" && (
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                      {role === "DC" ? "Delivery Center Executive Name *" : "Factory Name *"}
+                    </label>
+                    <input value={businessName} onChange={(e) => setBusinessName(e.target.value)}
+                      placeholder={role === "PRODUCER" ? "e.g. Sri Krishna Rice Mill" : role === "DC" ? "Enter executive name" : "Enter your business"}
+                      className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
+                  </div>
+                )}
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Factory Name *</label>
-                  <input value={businessName} onChange={(e) => setBusinessName(e.target.value)}
-                    placeholder={role === "PRODUCER" ? "e.g. Sri Krishna Rice Mill" : "Enter your business"}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Factory Location *</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                    {role === "FARMER" ? "Farmer Location *" : role === "DC" ? "Delivery Center Location *" : "Factory Location *"}
+                  </label>
                   <input value={businessLocation} onChange={(e) => setBusinessLocation(e.target.value)}
                     placeholder="Enter your Location"
                     className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
