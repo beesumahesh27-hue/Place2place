@@ -30,6 +30,12 @@ export default function CartPage() {
   }
 
   const grandTotal = totalPrice + delivery;
+  const qtyByUnit = items.reduce((acc, item) => {
+    const unit = item.product.unit || "units";
+    acc[unit] = (acc[unit] ?? 0) + item.quantity;
+    return acc;
+  }, {} as Record<string, number>);
+  const totalQuantityLabel = Object.entries(qtyByUnit).map(([unit, qty]) => `${qty} ${unit}`).join(", ");
 
   return (
     <div className="min-h-screen bg-[#f8f4ed] py-8 px-4">
@@ -53,7 +59,7 @@ export default function CartPage() {
                   <p className="text-xs text-[#c9a227] font-semibold">{item.product.producer.businessName ?? item.product.producer.name}</p>
                   <h3 className="font-bold text-[#1c3a2a] truncate">{item.product.name}</h3>
                   <p className="text-xs text-gray-500 mt-0.5">Variant: {item.variant}</p>
-                  <p className="font-bold text-[#1c3a2a] mt-1">₹{item.product.price.toLocaleString()}</p>
+                  <p className="font-bold text-[#1c3a2a] mt-1">₹{item.product.price.toLocaleString()} /{item.product.unit}</p>
                 </div>
                 <div className="flex flex-col items-end justify-between">
                   <button onClick={() => removeItem(item.product.id, item.variant)} className="text-red-400 hover:text-red-600">
@@ -80,6 +86,10 @@ export default function CartPage() {
             <div className="bg-white rounded-2xl p-5 shadow-sm sticky top-24">
               <h2 className="font-bold text-[#1c3a2a] text-lg mb-4">Order Summary</h2>
               <div className="space-y-2 text-sm">
+                <div className="flex justify-between text-gray-600">
+                  <span>Total Quantity</span>
+                  <span>{totalQuantityLabel}</span>
+                </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
                   <span>₹{totalPrice.toLocaleString()}</span>

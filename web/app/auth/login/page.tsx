@@ -119,7 +119,7 @@ export default function LoginPage() {
   // Step 3 → complete profile
   async function handleCompleteProfile() {
     if (!name.trim()) { setError("Full name is required"); return; }
-    if (needsBusiness && !businessName.trim()) { setError("Business / farm name is required"); return; }
+    if (needsBusiness && role !== "FARMER" && !businessName.trim()) { setError("Business name is required"); return; }
     if (needsBusiness && !businessLocation.trim()) { setError("Location is required"); return; }
     if (role === "PRODUCER") {
       if (!productsMade.trim()) { setError("Products made is required"); return; }
@@ -133,7 +133,10 @@ export default function LoginPage() {
     // FARMER registers as PRODUCER in the backend
     const backendRole = role === "FARMER" ? "PRODUCER" : role;
     const body: Record<string, string | number> = { name: name.trim(), role: backendRole };
-    if (needsBusiness) { body.businessName = businessName.trim(); body.businessLocation = businessLocation.trim(); }
+    if (needsBusiness) {
+      if (role !== "FARMER") body.businessName = businessName.trim();
+      body.businessLocation = businessLocation.trim();
+    }
     if (role === "PRODUCER") {
       body.factoryType  = factoryType;
       body.productsMade = productsMade.trim();
@@ -291,14 +294,16 @@ export default function LoginPage() {
             {/* Business fields (Producer / DC only) */}
             {needsBusiness && (
               <>
+                {role !== "FARMER" && (
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Factory Name *</label>
+                    <input value={businessName} onChange={(e) => setBusinessName(e.target.value)}
+                      placeholder={role === "PRODUCER" ? "e.g. Sri Krishna Rice Mill" : "Enter your business"}
+                      className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
+                  </div>
+                )}
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Factory Name *</label>
-                  <input value={businessName} onChange={(e) => setBusinessName(e.target.value)}
-                    placeholder={role === "PRODUCER" ? "e.g. Sri Krishna Rice Mill" : "Enter your business"}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Factory Location *</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">{role === "FARMER" ? "Farmer Location *" : "Factory Location *"}</label>
                   <input value={businessLocation} onChange={(e) => setBusinessLocation(e.target.value)}
                     placeholder="Enter your Location"
                     className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />

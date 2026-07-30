@@ -102,6 +102,7 @@ export default function ProductCard({ product }: { product: CartProduct }) {
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0] ?? "Standard");
   const [added, setAdded] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [hovering, setHovering] = useState(false);
   const { addItem } = useCart();
 
   const effectiveStatus =
@@ -132,19 +133,33 @@ export default function ProductCard({ product }: { product: CartProduct }) {
       <div
         className={`bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-[#ede8df] ${firstVideo ? "cursor-pointer" : ""}`}
         onClick={() => firstVideo && setShowVideo(true)}
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
       >
         <div className="relative h-28 bg-gray-100">
-          <img
-            src={thumb ?? placeholder}
-            alt={product.name}
-            className={`w-full h-full object-cover ${!thumb ? "opacity-60" : ""}`}
-          />
+          {hovering && firstVideo ? (
+            <video
+              key={firstVideo}
+              src={firstVideo}
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <img
+              src={thumb ?? placeholder}
+              alt={product.name}
+              className={`w-full h-full object-cover ${!thumb ? "opacity-60" : ""}`}
+            />
+          )}
           {product.organic && (
             <span className="absolute top-2 left-2 bg-[#1c3a2a] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
               ORGANIC
             </span>
           )}
-          {firstVideo && (
+          {firstVideo && !hovering && (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="bg-black/40 rounded-full p-2">
                 <svg className="w-5 h-5 text-white fill-white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>

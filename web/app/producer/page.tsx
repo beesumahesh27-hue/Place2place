@@ -81,11 +81,14 @@ function ProductFormModal({ product, categories, token, onClose, onSaved }: Prod
     unit:         product?.unit ?? "",
     variants:     product?.variants?.join(", ") ?? "",
     quantity:     product?.quantity?.toString() ?? "",
-    deliveryTime: product?.deliveryTime ?? "",
     organic:      product?.organic ?? false,
     categoryId:   product?.category?.id ?? (categories[0]?.id ?? ""),
     status:       product?.status ?? "AVAILABLE",
   });
+  const [deliveryValue, setDeliveryValue] = useState(product?.deliveryTime?.match(/\d+/)?.[0] ?? "");
+  const [deliveryUnit, setDeliveryUnit] = useState<"Days" | "Hours">(
+    /hour/i.test(product?.deliveryTime ?? "") ? "Hours" : "Days"
+  );
   const [images, setImages] = useState<FileList | null>(null);
   const [videos, setVideos] = useState<FileList | null>(null);
   const [saving, setSaving] = useState(false);
@@ -105,6 +108,7 @@ function ProductFormModal({ product, categories, token, onClose, onSaved }: Prod
           fd.append(k, String(v));
         }
       });
+      fd.append("deliveryTime", `${deliveryValue} ${deliveryUnit}`);
       if (images) Array.from(images).forEach((f) => fd.append("images", f));
       if (videos) Array.from(videos).forEach((f) => fd.append("videos", f));
       const url = editing ? `${API}/producer/products/${product!.id}` : `${API}/producer/products`;
@@ -158,14 +162,24 @@ function ProductFormModal({ product, categories, token, onClose, onSaved }: Prod
                 className="w-full rounded-2xl border border-slate-200 bg-white/80 px-3 py-3 text-sm text-slate-800 shadow-sm outline-none transition focus:border-[#c9a227] focus:ring-4 focus:ring-[#c9a227]/15" />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Stock Quantity *</label>
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Stock Quantity {form.unit ? `(${form.unit})` : ""} *
+              </label>
               <input required type="number" min="0" value={form.quantity} onChange={(e) => setForm((f) => ({ ...f, quantity: e.target.value }))}
                 className="w-full rounded-2xl border border-slate-200 bg-white/80 px-3 py-3 text-sm text-slate-800 shadow-sm outline-none transition focus:border-[#c9a227] focus:ring-4 focus:ring-[#c9a227]/15" />
             </div>
             <div>
               <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Delivery Time *</label>
-              <input required placeholder="e.g. 2–3 days" value={form.deliveryTime} onChange={(e) => setForm((f) => ({ ...f, deliveryTime: e.target.value }))}
-                className="w-full rounded-2xl border border-slate-200 bg-white/80 px-3 py-3 text-sm text-slate-800 shadow-sm outline-none transition focus:border-[#c9a227] focus:ring-4 focus:ring-[#c9a227]/15" />
+              <div className="flex gap-2">
+                <input required type="number" min="0" placeholder="e.g. 2" value={deliveryValue}
+                  onChange={(e) => setDeliveryValue(e.target.value)}
+                  className="w-full rounded-2xl border border-slate-200 bg-white/80 px-3 py-3 text-sm text-slate-800 shadow-sm outline-none transition focus:border-[#c9a227] focus:ring-4 focus:ring-[#c9a227]/15" />
+                <select value={deliveryUnit} onChange={(e) => setDeliveryUnit(e.target.value as "Days" | "Hours")}
+                  className="rounded-2xl border border-slate-200 bg-white/80 px-3 py-3 text-sm text-slate-800 shadow-sm outline-none transition focus:border-[#c9a227] focus:ring-4 focus:ring-[#c9a227]/15">
+                  <option value="Days">Days</option>
+                  <option value="Hours">Hours</option>
+                </select>
+              </div>
             </div>
             <div>
               <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Category *</label>
