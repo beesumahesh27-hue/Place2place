@@ -1,9 +1,9 @@
-import path from "path";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { env } from "./config/env";
+import { prisma } from "./config/database";
 import { logger } from "./utils/logger";
 import routes from "./routes";
 import { restorePendingTimeouts } from "./services/assignment.service";
@@ -23,13 +23,28 @@ app.use(express.urlencoded({ extended: true }));
 // ── Health check ──────────────────────────────────────────────────────────────
 app.get("/health", (_req, res) => res.json({ status: "ok", env: env.NODE_ENV }));
 
-// ── Static uploads (producer photos & videos) ────────────────────────────────
-// Override Helmet's same-origin CORP so the frontend (different port) can load media
-app.use("/uploads", (_req, res, next) => {
-  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
-  next();
+app.get("/health/db", async (_req, res) => {
+  const hasDatabaseUrl = !!process.env.DATABASE_URL;
+  const databaseUrlLength = process.env.DATABASE_URL?.length ?? 0;
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ hasDatabaseUrl, databaseUrlLength, dbConnected: true });
+  } catch (err) {
+    res.json({ hasDatabaseUrl, databaseUrlLength, dbConnected: false, error: (err as Error).message });
+  }
 });
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
+// TEMPORARY diagnostic — remove once the Brevo "Key not found" issue is confirmed fixed.
+app.get("/health/email-config", (_req, res) => {
+  const key = env.BREVO_API_KEY;
+  res.json({
+    hasBrevoKey: !!key,
+    brevoKeyLength: key?.length ?? 0,
+    brevoKeyLast4: key ? key.slice(-4) : null,
+    brevoSenderEmail: env.BREVO_SENDER_EMAIL,
+    nodeEnv: env.NODE_ENV,
+  });
+});
 
 // ── API routes ────────────────────────────────────────────────────────────────
 app.use("/api/v1", routes);

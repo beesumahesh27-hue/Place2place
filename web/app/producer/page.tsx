@@ -12,6 +12,10 @@ import { useAuth } from "@/context/AuthContext";
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 const MEDIA = "http://localhost:4000";
 
+function mediaSrc(src: string) {
+  return src.startsWith("/uploads") ? `${MEDIA}${src}` : src;
+}
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type Stats = { totalProducts: number; totalOrders: number; totalRevenue: number; totalStock: number };
@@ -77,11 +81,14 @@ function ProductFormModal({ product, categories, token, onClose, onSaved }: Prod
     unit:         product?.unit ?? "",
     variants:     product?.variants?.join(", ") ?? "",
     quantity:     product?.quantity?.toString() ?? "",
-    deliveryTime: product?.deliveryTime ?? "",
     organic:      product?.organic ?? false,
     categoryId:   product?.category?.id ?? (categories[0]?.id ?? ""),
     status:       product?.status ?? "AVAILABLE",
   });
+  const [deliveryValue, setDeliveryValue] = useState(product?.deliveryTime?.match(/\d+/)?.[0] ?? "");
+  const [deliveryUnit, setDeliveryUnit] = useState<"Days" | "Hours">(
+    /hour/i.test(product?.deliveryTime ?? "") ? "Hours" : "Days"
+  );
   const [images, setImages] = useState<FileList | null>(null);
   const [videos, setVideos] = useState<FileList | null>(null);
   const [saving, setSaving] = useState(false);
@@ -101,6 +108,7 @@ function ProductFormModal({ product, categories, token, onClose, onSaved }: Prod
           fd.append(k, String(v));
         }
       });
+      fd.append("deliveryTime", `${deliveryValue} ${deliveryUnit}`);
       if (images) Array.from(images).forEach((f) => fd.append("images", f));
       if (videos) Array.from(videos).forEach((f) => fd.append("videos", f));
       const url = editing ? `${API}/producer/products/${product!.id}` : `${API}/producer/products`;
@@ -154,14 +162,24 @@ function ProductFormModal({ product, categories, token, onClose, onSaved }: Prod
                 className="w-full rounded-2xl border border-slate-200 bg-white/80 px-3 py-3 text-sm text-slate-800 shadow-sm outline-none transition focus:border-[#c9a227] focus:ring-4 focus:ring-[#c9a227]/15" />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Stock Quantity *</label>
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Stock Quantity {form.unit ? `(${form.unit})` : ""} *
+              </label>
               <input required type="number" min="0" value={form.quantity} onChange={(e) => setForm((f) => ({ ...f, quantity: e.target.value }))}
                 className="w-full rounded-2xl border border-slate-200 bg-white/80 px-3 py-3 text-sm text-slate-800 shadow-sm outline-none transition focus:border-[#c9a227] focus:ring-4 focus:ring-[#c9a227]/15" />
             </div>
             <div>
               <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Delivery Time *</label>
-              <input required placeholder="e.g. 2–3 days" value={form.deliveryTime} onChange={(e) => setForm((f) => ({ ...f, deliveryTime: e.target.value }))}
-                className="w-full rounded-2xl border border-slate-200 bg-white/80 px-3 py-3 text-sm text-slate-800 shadow-sm outline-none transition focus:border-[#c9a227] focus:ring-4 focus:ring-[#c9a227]/15" />
+              <div className="flex gap-2">
+                <input required type="number" min="0" placeholder="e.g. 2" value={deliveryValue}
+                  onChange={(e) => setDeliveryValue(e.target.value)}
+                  className="w-full rounded-2xl border border-slate-200 bg-white/80 px-3 py-3 text-sm text-slate-800 shadow-sm outline-none transition focus:border-[#c9a227] focus:ring-4 focus:ring-[#c9a227]/15" />
+                <select value={deliveryUnit} onChange={(e) => setDeliveryUnit(e.target.value as "Days" | "Hours")}
+                  className="rounded-2xl border border-slate-200 bg-white/80 px-3 py-3 text-sm text-slate-800 shadow-sm outline-none transition focus:border-[#c9a227] focus:ring-4 focus:ring-[#c9a227]/15">
+                  <option value="Days">Days</option>
+                  <option value="Hours">Hours</option>
+                </select>
+              </div>
             </div>
             <div>
               <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Category *</label>
@@ -460,7 +478,7 @@ export default function ProducerDashboard() {
                     {products.map((p) => (
                       <div key={p.id} className="flex gap-4 items-center border-b border-white/40 p-4 last:border-b-0">
                         {p.images[0] ? (
-                          <img src={`${MEDIA}${p.images[0]}`} alt={p.name}
+                          <img src={mediaSrc(p.images[0])} alt={p.name}
                             className="w-16 h-16 object-cover rounded-2xl shrink-0 ring-1 ring-white/60 shadow-sm" />
                         ) : (
                           <div className="w-16 h-16 rounded-2xl shrink-0 flex items-center justify-center bg-[linear-gradient(135deg,rgba(23,52,39,0.10),rgba(201,162,39,0.14))]">
@@ -628,7 +646,7 @@ export default function ProducerDashboard() {
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-3">
                                 {row.image ? (
-                                  <img src={`${MEDIA}${row.image}`} alt={row.name} className="w-9 h-9 rounded-xl object-cover shrink-0 ring-1 ring-white/60" />
+                                  <img src={mediaSrc(row.image)} alt={row.name} className="w-9 h-9 rounded-xl object-cover shrink-0 ring-1 ring-white/60" />
                                 ) : (
                                   <div className="w-9 h-9 rounded-xl bg-[linear-gradient(135deg,rgba(23,52,39,0.10),rgba(201,162,39,0.14))] flex items-center justify-center shrink-0">
                                     <Package className="w-4 h-4 text-[#173427]/40" />
@@ -721,7 +739,7 @@ export default function ProducerDashboard() {
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-3">
                                 {row.image ? (
-                                  <img src={`${MEDIA}${row.image}`} alt={row.name} className="w-9 h-9 rounded-xl object-cover shrink-0 ring-1 ring-white/60" />
+                                  <img src={mediaSrc(row.image)} alt={row.name} className="w-9 h-9 rounded-xl object-cover shrink-0 ring-1 ring-white/60" />
                                 ) : (
                                   <div className="w-9 h-9 rounded-xl bg-[linear-gradient(135deg,rgba(23,52,39,0.10),rgba(201,162,39,0.14))] flex items-center justify-center shrink-0">
                                     <Package className="w-4 h-4 text-[#173427]/40" />

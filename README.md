@@ -37,9 +37,7 @@ The platform is built with **Next.js** on the frontend and **Express.js with Typ
 ```
 Place2place/
 ├── web/          →  Next.js 16 frontend     (port 3000)
-├── server/       →  Express + TS REST API   (port 4000)
-├── database/     →  Prisma schema + SQL migrations
-└── package.json  →  Root Prisma client
+└── server/       →  Express + TS REST API + Prisma schema/migrations (port 4000)
 ```
 
 ---
