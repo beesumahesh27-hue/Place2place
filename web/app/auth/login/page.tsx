@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { Mail } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 
@@ -39,7 +39,8 @@ export default function LoginPage() {
   const { login } = useAuth();
 
   const [step, setStep]             = useState<Step>("mobile");
-  const [email, setEmail]           = useState("");
+  const [contactMethod, setContactMethod] = useState<"email" | "mobile">("email");
+  const [contact, setContact]       = useState("");
   const [otpValues, setOtpValues]   = useState(["", "", "", "", "", ""]);
   const [tempToken, setTempToken]   = useState("");
   const [devOtp, setDevOtp]         = useState("");
@@ -89,9 +90,13 @@ export default function LoginPage() {
 
   // Step 1 → send OTP
   async function handleSendOtp() {
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError("Enter a valid email address"); return; }
+    if (contactMethod === "email") {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact)) { setError("Enter a valid email address"); return; }
+    } else {
+      if (!/^[6-9]\d{9}$/.test(contact)) { setError("Enter a valid 10-digit mobile number"); return; }
+    }
     setError(""); setLoading(true); setDevOtp(""); setOtpValues(["", "", "", "", "", ""]);
-    const { ok, data } = await post("/auth/send-otp", { contact: email, type: "email" }).catch(() => ({ ok: false, data: { message: "Network error" } }));
+    const { ok, data } = await post("/auth/send-otp", { contact, type: contactMethod === "email" ? "email" : "phone" }).catch(() => ({ ok: false, data: { message: "Network error" } }));
     setLoading(false);
     if (!ok) { setError(data.message ?? "Failed to send OTP"); return; }
     if (data.data?.devOtp) setDevOtp(data.data.devOtp);
@@ -102,7 +107,7 @@ export default function LoginPage() {
   async function handleVerifyOtp() {
     if (otp.length < 6) { setError("Enter the full 6-digit OTP"); return; }
     setError(""); setLoading(true);
-    const { ok, data } = await post("/auth/verify-otp", { contact: email, otp }).catch(() => ({ ok: false, data: { message: "Network error" } }));
+    const { ok, data } = await post("/auth/verify-otp", { contact, otp }).catch(() => ({ ok: false, data: { message: "Network error" } }));
     setLoading(false);
     if (!ok) { setError(data.message ?? "Verification failed"); return; }
 
@@ -120,7 +125,7 @@ export default function LoginPage() {
   // Step 3 → complete profile
   async function handleCompleteProfile() {
     if (!name.trim()) { setError("Full name is required"); return; }
-    if (!/^[6-9]\d{9}$/.test(mobileNumber)) { setError("Enter a valid 10-digit mobile number"); return; }
+    if (contactMethod === "email" && !/^[6-9]\d{9}$/.test(mobileNumber)) { setError("Enter a valid 10-digit mobile number"); return; }
     if (needsBusiness && role !== "FARMER" && !businessName.trim()) { setError("Business name is required"); return; }
     if (needsBusiness && !businessLocation.trim()) { setError("Location is required"); return; }
     if (role === "PRODUCER") {
@@ -134,7 +139,7 @@ export default function LoginPage() {
 
     // FARMER registers as PRODUCER in the backend
     const backendRole = role === "FARMER" ? "PRODUCER" : role;
-    const body: Record<string, string | number> = { name: name.trim(), mobile: mobileNumber, role: backendRole };
+    const body: Record<string, string | number> = { name: name.trim(), mobile: contactMethod === "email" ? mobileNumber : contact, role: backendRole };
     if (needsBusiness) {
       if (role !== "FARMER") body.businessName = businessName.trim();
       body.businessLocation = businessLocation.trim();
@@ -176,7 +181,7 @@ export default function LoginPage() {
   }
 
   const stepTitles: Record<Step, string> = { mobile: "Welcome back", otp: "Verify OTP", profile: "Create your account" };
-  const stepSubs: Record<Step, string>   = { mobile: "Sign in or register with OTP", otp: `Code sent to ${email}`, profile: "Tell us about yourself" };
+  const stepSubs: Record<Step, string>   = { mobile: "Sign in or register with OTP", otp: `Code sent to ${contact}`, profile: "Tell us about yourself" };
 
   return (
     <div className="min-h-screen bg-[#f8f4ed] flex items-center justify-center p-4">
@@ -207,18 +212,40 @@ export default function LoginPage() {
 
         {error && <p className="bg-red-50 border border-red-200 text-red-600 text-xs rounded-xl px-4 py-2.5 mb-4 text-center">⚠ {error}</p>}
 
-        {/* STEP 1 — Email */}
+        {/* STEP 1 — Email or Mobile */}
         {step === "mobile" && (
           <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSendOtp(); }}>
+            <div className="flex bg-[#f8f4ed] border border-gray-200 rounded-xl p-1 gap-1">
+              {(["email", "mobile"] as const).map((m) => (
+                <button key={m} type="button"
+                  onClick={() => { setContactMethod(m); setContact(""); setError(""); }}
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                    contactMethod === m ? "bg-[#1c3a2a] text-white" : "text-gray-500 hover:text-[#1c3a2a]"
+                  }`}>
+                  {m === "email" ? <Mail className="w-3.5 h-3.5" /> : <Phone className="w-3.5 h-3.5" />}
+                  {m === "email" ? "Email" : "Mobile"}
+                </button>
+              ))}
+            </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
+              <label htmlFor="contact" className="block text-sm font-medium text-gray-700 mb-1.5">
+                {contactMethod === "email" ? "Email Address" : "Mobile Number"}
+              </label>
               <div className="flex">
                 <span className="border border-r-0 border-gray-200 rounded-l-xl px-3 flex items-center text-sm text-gray-500 bg-[#f8f4ed]">
-                  <Mail className="w-4 h-4" />
+                  {contactMethod === "email" ? <Mail className="w-4 h-4" /> : <Phone className="w-4 h-4" />}
                 </span>
-                <input id="email" type="email" name="email" autoComplete="email" required value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }}
-                  placeholder="you@example.com"
-                  className="flex-1 border border-gray-200 rounded-r-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
+                {contactMethod === "email" ? (
+                  <input id="contact" type="email" name="email" autoComplete="email" required value={contact}
+                    onChange={(e) => { setContact(e.target.value); setError(""); }}
+                    placeholder="you@example.com"
+                    className="flex-1 border border-gray-200 rounded-r-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
+                ) : (
+                  <input id="contact" type="tel" name="mobile" autoComplete="tel" required maxLength={10} inputMode="numeric" value={contact}
+                    onChange={(e) => { setContact(e.target.value.replace(/\D/g, "")); setError(""); }}
+                    placeholder="10-digit mobile number"
+                    className="flex-1 border border-gray-200 rounded-r-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
+                )}
               </div>
             </div>
             <button type="submit" disabled={loading}
@@ -255,7 +282,7 @@ export default function LoginPage() {
             </button>
             <div className="flex items-center justify-between text-sm">
               <button onClick={() => { setStep("mobile"); setOtpValues(["","","","","",""]); setError(""); setDevOtp(""); }}
-                className="text-gray-500 hover:text-[#1c3a2a]">← Change email</button>
+                className="text-gray-500 hover:text-[#1c3a2a]">← Change {contactMethod === "email" ? "email" : "mobile"}</button>
               <button onClick={handleSendOtp} disabled={loading} className="text-[#1c3a2a] font-semibold hover:underline disabled:opacity-50">Resend OTP</button>
             </div>
           </div>
@@ -264,7 +291,7 @@ export default function LoginPage() {
         {/* STEP 3 — Profile (new users only) */}
         {step === "profile" && (
           <div className="space-y-4">
-            <p className="text-xs text-center bg-green-50 py-2 rounded-xl text-green-700 font-semibold">✓ {email} verified</p>
+            <p className="text-xs text-center bg-green-50 py-2 rounded-xl text-green-700 font-semibold">✓ {contact} verified</p>
 
             {/* Name */}
             <div>
@@ -273,14 +300,16 @@ export default function LoginPage() {
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
             </div>
 
-            {/* Mobile number */}
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Mobile Number *</label>
-              <input value={mobileNumber} maxLength={10} inputMode="numeric"
-                onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ""))}
-                placeholder="10-digit mobile number"
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
-            </div>
+            {/* Mobile number (only needed when the user logged in via email) */}
+            {contactMethod === "email" && (
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Mobile Number *</label>
+                <input value={mobileNumber} maxLength={10} inputMode="numeric"
+                  onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ""))}
+                  placeholder="10-digit mobile number"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
+              </div>
+            )}
 
             {/* Role */}
             <div>
