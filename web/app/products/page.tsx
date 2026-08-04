@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, SlidersHorizontal, X, Play } from "lucide-react";
+import { Search, SlidersHorizontal, X, Play, CheckCircle } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 const MEDIA = "http://localhost:4000";
 const VIDEO_LIMIT_SEC = 50;
 
@@ -195,6 +195,7 @@ function ProductCard({ product, onAdd, onOpen }: {
 }) {
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0] ?? "");
   const [mediaIndex, setMediaIndex] = useState(0);
+  const [added, setAdded] = useState(false);
   const statusColor: Record<string, string> = {
     AVAILABLE: "text-green-600 bg-green-50",
     LOW_STOCK: "text-amber-600 bg-amber-50",
@@ -286,12 +287,31 @@ function ProductCard({ product, onAdd, onOpen }: {
               <span className="text-[10px] text-gray-400 whitespace-nowrap">· {product.deliveryTime}</span>
             </div>
           </div>
-          <button
-            disabled={unavailable}
-            onClick={(e) => { e.stopPropagation(); onAdd(product, selectedVariant); }}
-            className="shrink-0 bg-[#1c3a2a] text-white text-[11px] font-bold px-3 py-1.5 rounded-lg hover:bg-[#2d5a3d] transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-            {unavailable ? product.status.replace("_", " ") : "Add to cart"}
-          </button>
+          <div className="relative">
+            {added && (
+              <span className="absolute -top-8 right-0 bg-[#1c3a2a] text-white text-[10px] font-semibold px-2.5 py-1 rounded-lg whitespace-nowrap shadow-lg animate-in fade-in">
+                Added to cart
+                <span className="absolute top-full right-3 w-0 h-0 border-4 border-transparent border-t-[#1c3a2a]" />
+              </span>
+            )}
+            <button
+              disabled={unavailable || added}
+              onClick={(e) => {
+                e.stopPropagation();
+                onAdd(product, selectedVariant);
+                setAdded(true);
+                setTimeout(() => setAdded(false), 1500);
+              }}
+              className={`shrink-0 text-[11px] font-bold px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 ${
+                added
+                  ? "bg-green-600 text-white"
+                  : unavailable
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-[#1c3a2a] text-white hover:bg-[#2d5a3d]"
+              }`}>
+              {added ? <><CheckCircle className="w-3.5 h-3.5" /> Added!</> : unavailable ? product.status.replace("_", " ") : "Add to cart"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

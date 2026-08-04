@@ -127,7 +127,7 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen bg-[#f8f4ed] py-8 px-4">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-bold text-[#1c3a2a] mb-6">My Orders</h1>
         <div className="space-y-4">
           {orders.map((order) => {

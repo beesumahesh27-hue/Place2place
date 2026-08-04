@@ -14,7 +14,7 @@ export default function SuccessPage() {
 
   return (
     <div className="min-h-screen bg-[#f8f4ed] flex items-center justify-center px-4 py-12">
-      <div className="bg-white rounded-3xl shadow-xl max-w-md w-full p-8 text-center">
+      <div className="bg-white rounded-3xl shadow-xl max-w-lg w-full p-8 text-center">
         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
           <CheckCircle className="w-10 h-10 text-green-600" />
         </div>

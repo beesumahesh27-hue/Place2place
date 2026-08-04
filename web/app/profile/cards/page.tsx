@@ -22,7 +22,7 @@ export default function CardsPage() {
 
   return (
     <div className="min-h-screen bg-[#f8f4ed] py-8 px-4">
-      <div className="max-w-lg mx-auto">
+      <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-5">
           <h1 className="text-xl font-bold text-[#1c3a2a] flex items-center gap-2"><CreditCard className="w-5 h-5" />Saved Cards</h1>
           <button className="flex items-center gap-1.5 bg-[#1c3a2a] text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-[#2d5a3d] transition-colors">

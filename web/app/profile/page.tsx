@@ -24,7 +24,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#f8f4ed] py-8 px-4">
-      <div className="max-w-lg mx-auto space-y-5">
+      <div className="max-w-2xl mx-auto space-y-5">
         {/* Avatar card */}
         <div className="bg-[#1c3a2a] rounded-2xl p-6 flex items-center gap-5">
           <div className="w-16 h-16 rounded-full bg-[#c9a227] flex items-center justify-center text-white font-bold text-2xl shrink-0">

@@ -201,19 +201,27 @@ export default function ProductCard({ product }: { product: CartProduct }) {
             <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full whitespace-nowrap ${status.color}`}>
               {status.label}
             </span>
-            <button
-              onClick={handleAddToCart}
-              disabled={unavailable || added}
-              className={`shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 ${
-                added
-                  ? "bg-green-600 text-white"
-                  : unavailable
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-[#1c3a2a] text-white hover:bg-[#2d5a3d]"
-              }`}
-            >
-              {added ? <><CheckCircle className="w-3 h-3" /> Added!</> : unavailable ? status.label : "Add to cart"}
-            </button>
+            <div className="relative">
+              {added && (
+                <span className="absolute -top-8 right-0 bg-[#1c3a2a] text-white text-[10px] font-semibold px-2.5 py-1 rounded-lg whitespace-nowrap shadow-lg">
+                  Added to cart
+                  <span className="absolute top-full right-3 w-0 h-0 border-4 border-transparent border-t-[#1c3a2a]" />
+                </span>
+              )}
+              <button
+                onClick={handleAddToCart}
+                disabled={unavailable || added}
+                className={`shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 ${
+                  added
+                    ? "bg-green-600 text-white"
+                    : unavailable
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    : "bg-[#1c3a2a] text-white hover:bg-[#2d5a3d]"
+                }`}
+              >
+                {added ? <><CheckCircle className="w-3 h-3" /> Added!</> : unavailable ? status.label : "Add to cart"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
