@@ -142,7 +142,7 @@ export default async function HomePage() {
               </div>
               <Link href="/products" className="text-[#1c3a2a] font-semibold text-sm hover:underline">View all →</Link>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
               <FeaturedProducts products={featured} />
             </div>
           </div>

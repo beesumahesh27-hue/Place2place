@@ -191,7 +191,7 @@ export default function FarmerPage() {
               <button onClick={() => setSearch("")} className="mt-3 text-green-600 text-sm font-semibold hover:underline">Clear search</button>
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
               {filtered.map((f, i) => (
                 <div key={`${f.name}-${i}`} className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
                   <div className="bg-gradient-to-r from-green-700 to-emerald-800 px-5 py-4 flex items-center gap-3">

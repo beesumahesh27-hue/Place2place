@@ -264,7 +264,7 @@ export default function DCDashboard() {
               <p className="text-xs mt-1">Producers who register on the platform will appear here.</p>
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
               {factories.map((f) => (
                 <div key={f.name} className="bg-white rounded-2xl p-5 shadow-sm">
                   <div className="flex items-start justify-between mb-3">

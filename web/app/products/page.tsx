@@ -391,7 +391,7 @@ function ProductsContent() {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="bg-white rounded-xl h-52 animate-pulse" />
               ))}
@@ -401,7 +401,7 @@ function ProductsContent() {
               <p className="text-5xl mb-3">🌿</p><p className="text-lg">No products found</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
               {products.map((p) => (
                 <ProductCard key={p.id} product={p} onAdd={addItem} onOpen={setOpenProduct} />
               ))}
