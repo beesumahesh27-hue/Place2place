@@ -104,7 +104,7 @@ export default function PaymentPage() {
 
       {/* ── Stepper ─────────────────────────────────────────────── */}
       <div className="bg-white border-b border-gray-100 px-6 py-4">
-        <div className="max-w-6xl mx-auto flex items-center gap-0">
+        <div className="max-w-6xl 2xl:max-w-[1400px] mx-auto flex items-center gap-0">
           {STEPS.map((step, i) => {
             const done    = i < 2;
             const current = i === 2;
@@ -132,7 +132,7 @@ export default function PaymentPage() {
       </div>
 
       {/* ── Main split ──────────────────────────────────────────── */}
-      <div className="max-w-6xl mx-auto lg:grid lg:grid-cols-[1fr_340px] min-h-[calc(100vh-65px)]">
+      <div className="max-w-6xl 2xl:max-w-[1400px] mx-auto lg:grid lg:grid-cols-[1fr_340px] min-h-[calc(100vh-65px)]">
 
         {/* LEFT — payment selection */}
         <div className="px-6 py-10 lg:px-12 lg:py-14">
