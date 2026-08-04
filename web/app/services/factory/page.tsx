@@ -62,7 +62,7 @@ export default function FactoryPage() {
 
       {/* Hero */}
       <div className={`${C.hero} px-6 py-12 md:py-16`}>
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1600px] mx-auto">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-14 h-14 bg-white/15 rounded-2xl flex items-center justify-center shrink-0 border border-white/20">
               <Factory className="w-7 h-7 text-white" />
@@ -80,7 +80,7 @@ export default function FactoryPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <div className="max-w-[1600px] mx-auto px-6 py-8 space-y-8">
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

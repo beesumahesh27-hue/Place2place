@@ -50,7 +50,7 @@ export default function TurmericPage() {
     <div className="min-h-screen bg-[#f8f4ed]">
       {/* Hero */}
       <div className="bg-gradient-to-br from-yellow-500 to-orange-600 px-6 py-12 md:py-16">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1600px] mx-auto">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
               <Wheat className="w-7 h-7 text-white" />
@@ -67,7 +67,7 @@ export default function TurmericPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <div className="max-w-[1600px] mx-auto px-6 py-8 space-y-8">
 
         {/* Stats */}
         {stats.length > 0 && (

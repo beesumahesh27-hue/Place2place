@@ -124,7 +124,7 @@ export default function DCDashboard() {
     <div className="min-h-screen bg-[#f8f4ed]">
       {/* Header */}
       <div className="bg-[#1c3a2a] px-6 py-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-[1600px] mx-auto flex items-center justify-between">
           <div>
             <p className="text-[#c9a227] text-sm font-semibold">Delivery Center</p>
             <h1 className="text-white text-2xl font-bold">{profile?.hubName ?? "DC Hub"}</h1>
@@ -149,7 +149,7 @@ export default function DCDashboard() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-[1600px] mx-auto px-6 py-8">
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[

@@ -369,7 +369,7 @@ export default function ProducerDashboard() {
       <div className="absolute left-[-8rem] top-20 h-72 w-72 rounded-full bg-[#c9a227]/20 blur-3xl" />
       <div className="absolute right-[-6rem] top-56 h-80 w-80 rounded-full bg-sky-400/15 blur-3xl" />
 
-      <div className="relative mx-auto max-w-7xl">
+      <div className="relative mx-auto max-w-[1600px]">
 
         {/* ── Top header banner ── */}
         <div className="border-b border-white/30 bg-white/60 px-6 py-5 backdrop-blur-2xl sm:px-8">
@@ -831,7 +831,7 @@ export default function ProducerDashboard() {
 
           <div className="h-4" />
         </div>{/* end content panel */}
-      </div>{/* end max-w-7xl */}
+      </div>{/* end max-w-[1600px] */}
 
       {/* Product Form Modal */}
       {showForm && (

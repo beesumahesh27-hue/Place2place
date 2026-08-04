@@ -55,7 +55,7 @@ export default function DCPage() {
     <div className="min-h-screen bg-[#f8f4ed]">
       {/* Hero */}
       <div className="px-6 py-12 md:py-16" style={{ background: "linear-gradient(135deg, #e8d5b7 0%, #d4b896 50%, #c4a07a 100%)" }}>
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1600px] mx-auto">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style={{ background: "rgba(92,61,30,0.15)" }}>
               <Truck className="w-7 h-7" style={{ color: "#5C3D1E" }} />
@@ -72,7 +72,7 @@ export default function DCPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <div className="max-w-[1600px] mx-auto px-6 py-8 space-y-8">
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

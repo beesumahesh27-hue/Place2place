@@ -213,7 +213,7 @@ export default function MarketAtYourPlacePage() {
     <div className="min-h-screen bg-[#f8f4ed]">
       {/* Hero */}
       <div className="bg-gradient-to-br from-[#1c3a2a] to-[#2d5a3d] px-6 py-12 md:py-16">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1600px] mx-auto">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
               <Store className="w-7 h-7 text-white" />
@@ -246,7 +246,7 @@ export default function MarketAtYourPlacePage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <div className="max-w-[1600px] mx-auto px-6 py-8 space-y-8">
 
         {/* ── Booking / Success ── */}
         {booked && submitted ? (
