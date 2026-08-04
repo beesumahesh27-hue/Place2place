@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Wheat, MapPin } from "lucide-react";
+import { Wheat, MapPin, Phone } from "lucide-react";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 
 type Mill = {
   name: string;
+  mobile: string;
   location: string;
   method: string;
   curcumin: string;
@@ -161,6 +162,7 @@ export default function TurmericPage() {
                     <th className="text-center px-6 py-3 text-xs font-bold text-[#1c3a2a] uppercase tracking-wide">Curcumin</th>
                     <th className="text-center px-6 py-3 text-xs font-bold text-[#1c3a2a] uppercase tracking-wide">Capacity</th>
                     <th className="text-center px-6 py-3 text-xs font-bold text-[#1c3a2a] uppercase tracking-wide">Partner Since</th>
+                    <th className="text-center px-6 py-3 text-xs font-bold text-[#1c3a2a] uppercase tracking-wide">Contact</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
@@ -172,6 +174,15 @@ export default function TurmericPage() {
                       <td className="px-6 py-4 text-center"><span className="text-xs bg-yellow-100 text-yellow-700 font-bold px-3 py-1 rounded-full">{m.curcumin}</span></td>
                       <td className="px-6 py-4 text-center text-xs text-gray-500">{m.capacity}</td>
                       <td className="px-6 py-4 text-center"><span className="text-xs bg-green-100 text-green-700 font-semibold px-3 py-1 rounded-full">{m.since}</span></td>
+                      <td className="px-6 py-4 text-center">
+                        <a
+                          href={`tel:${m.mobile.startsWith("+") ? m.mobile : `+91${m.mobile}`}`}
+                          className="inline-flex items-center justify-center gap-1.5 bg-[#1c3a2a] hover:bg-[#2d5a3d] text-white font-semibold px-3 py-1.5 rounded-full transition-colors text-xs"
+                        >
+                          <Phone className="w-3 h-3" />
+                          {m.mobile}
+                        </a>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

@@ -51,7 +51,7 @@ export async function verifyOtpAndLogin(req: Request, res: Response) {
 export async function updateProfile(req: AuthRequest, res: Response) {
   try {
     const {
-      name, role, businessName, businessLocation, email,
+      name, role, businessName, businessLocation, email, mobile,
       latitude, longitude,
       producerSubType,
       factoryType, productsMade, skuCount, established, description,
@@ -65,6 +65,7 @@ export async function updateProfile(req: AuthRequest, res: Response) {
       businessName?: string;
       businessLocation?: string;
       email?: string;
+      mobile?: string;
       latitude?: number;
       longitude?: number;
       producerSubType?: "factory" | "farmer";
@@ -92,8 +93,15 @@ export async function updateProfile(req: AuthRequest, res: Response) {
     };
 
     if (!name?.trim()) return badRequest(res, "Name is required");
+    if (mobile !== undefined && !/^[6-9]\d{9}$/.test(mobile)) return badRequest(res, "Enter a valid 10-digit mobile number");
 
-    const user = await updateUserProfile(req.userId!, { name, role, businessName, businessLocation, email, latitude, longitude });
+    let user;
+    try {
+      user = await updateUserProfile(req.userId!, { name, role, businessName, businessLocation, email, mobile, latitude, longitude });
+    } catch (err: any) {
+      if (err?.code === "P2002") return badRequest(res, "This mobile number is already registered");
+      throw err;
+    }
 
     if (role === "PRODUCER") {
       if (producerSubType === "farmer" && crops && farmSince) {

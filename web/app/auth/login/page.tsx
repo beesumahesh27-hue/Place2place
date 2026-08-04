@@ -46,6 +46,7 @@ export default function LoginPage() {
 
   // Profile fields (new users only)
   const [name, setName]                   = useState("");
+  const [mobileNumber, setMobileNumber]   = useState("");
   const [role, setRole]                   = useState<Role>("CUSTOMER");
   const [businessName, setBusinessName]   = useState("");
   const [businessLocation, setBusinessLocation] = useState("");
@@ -119,6 +120,7 @@ export default function LoginPage() {
   // Step 3 → complete profile
   async function handleCompleteProfile() {
     if (!name.trim()) { setError("Full name is required"); return; }
+    if (!/^[6-9]\d{9}$/.test(mobileNumber)) { setError("Enter a valid 10-digit mobile number"); return; }
     if (needsBusiness && role !== "FARMER" && !businessName.trim()) { setError("Business name is required"); return; }
     if (needsBusiness && !businessLocation.trim()) { setError("Location is required"); return; }
     if (role === "PRODUCER") {
@@ -132,7 +134,7 @@ export default function LoginPage() {
 
     // FARMER registers as PRODUCER in the backend
     const backendRole = role === "FARMER" ? "PRODUCER" : role;
-    const body: Record<string, string | number> = { name: name.trim(), role: backendRole };
+    const body: Record<string, string | number> = { name: name.trim(), mobile: mobileNumber, role: backendRole };
     if (needsBusiness) {
       if (role !== "FARMER") body.businessName = businessName.trim();
       body.businessLocation = businessLocation.trim();
@@ -268,6 +270,15 @@ export default function LoginPage() {
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Full Name *</label>
               <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your name"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
+            </div>
+
+            {/* Mobile number */}
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Mobile Number *</label>
+              <input value={mobileNumber} maxLength={10} inputMode="numeric"
+                onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ""))}
+                placeholder="10-digit mobile number"
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[#1c3a2a] bg-[#f8f4ed]" />
             </div>
 

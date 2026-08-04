@@ -38,6 +38,7 @@ export async function updateUserProfile(userId: string, data: {
   businessName?: string;
   businessLocation?: string;
   email?: string;
+  mobile?: string;
   latitude?: number;
   longitude?: number;
 }) {
@@ -49,6 +50,7 @@ export async function updateUserProfile(userId: string, data: {
       ...(data.businessName !== undefined ? { businessName: data.businessName } : {}),
       ...(data.businessLocation !== undefined ? { businessLocation: data.businessLocation } : {}),
       ...(data.email ? { email: data.email } : {}),
+      ...(data.mobile ? { mobile: data.mobile } : {}),
       ...(data.latitude  !== undefined ? { latitude:  data.latitude  } : {}),
       ...(data.longitude !== undefined ? { longitude: data.longitude } : {}),
     },

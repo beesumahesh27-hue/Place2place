@@ -103,6 +103,7 @@ export async function listTurmericMills() {
     where: { role: "PRODUCER", producerProfile: { factoryType: "Spice Mill" } },
     select: {
       name: true,
+      mobile: true,
       businessName: true,
       businessLocation: true,
       producerProfile: {
@@ -119,6 +120,7 @@ export async function listTurmericMills() {
 
   return mills.map((u) => ({
     name: u.businessName ?? u.name,
+    mobile: u.mobile,
     location: u.businessLocation ?? "",
     method: u.producerProfile!.grindingMethod ?? "N/A",
     curcumin: u.producerProfile!.curcuminContent ?? "N/A",
