@@ -37,7 +37,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="sticky top-0 z-50 shadow-md" style={{ background: "linear-gradient(135deg, #fff8e1 0%, #ffe0b2 40%, #ffb347 100%)"}}>
-        <div className="max-w-[1600px] mx-auto px-4 h-16 flex items-center gap-3">
+        <div className="px-4 h-16 flex items-center gap-3">
 
           {/* Hamburger — left */}
           <button

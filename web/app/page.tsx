@@ -59,7 +59,7 @@ export default async function HomePage() {
     <div>
       {/* Hero — Sunrise gradient */}
       <section className="py-8 px-6" style={{ background: "linear-gradient(135deg, #fff8e1 0%, #ffe0b2 40%, #ffb347 100%)" }}>
-        <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row items-center gap-8">
+        <div className="flex flex-col lg:flex-row items-center gap-8">
           <div className="flex-1">
             <span className="inline-flex items-center gap-2 border border-[#b45309]/30 rounded-full px-3 py-1 text-xs font-semibold text-[#92400e] mb-3 bg-white/40">
               🌿 TELANGANA&apos;S FARM NETWORK
@@ -116,7 +116,7 @@ export default async function HomePage() {
 
       {/* Products Section */}
       <section className="py-8 px-6 bg-white">
-        <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Category sidebar */}
           <aside className="lg:w-48 shrink-0">
             <p className="text-xs font-bold text-[#c9a227] uppercase tracking-widest mb-1">CATEGORIES</p>

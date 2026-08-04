@@ -354,7 +354,7 @@ function ProductsContent() {
         />
       )}
 
-      <div className="max-w-[1600px] mx-auto px-6 py-8 flex flex-col lg:flex-row gap-8">
+      <div className="px-6 py-8 flex flex-col lg:flex-row gap-8">
         {/* Sidebar */}
         <aside className="lg:w-60 shrink-0">
           <div className="bg-white rounded-2xl p-5 shadow-sm">
@@ -417,7 +417,7 @@ export default function ProductsPage() {
   return (
     <div className="bg-[#f8f4ed] min-h-screen">
       <div className="bg-white border-b border-gray-100 px-6 py-5">
-        <div className="max-w-[1600px] mx-auto">
+        <div>
           <h1 className="text-2xl font-bold text-[#1c3a2a]">All Products</h1>
           <p className="text-gray-500 text-sm">Fresh from local factories & farms</p>
         </div>

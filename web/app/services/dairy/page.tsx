@@ -48,7 +48,7 @@ export default function DairyPage() {
     <div className="min-h-screen bg-[#f5f5f0]">
       {/* Hero */}
       <div className="bg-gradient-to-br from-white via-[#f0eeea] to-[#e8e4df] px-6 py-12 md:py-16 border-b border-gray-200">
-        <div className="max-w-[1600px] mx-auto">
+        <div>
           <div className="flex items-center gap-4 mb-4">
             <div className="w-14 h-14 bg-[#1c3a2a]/10 rounded-2xl flex items-center justify-center shrink-0">
               <Milk className="w-7 h-7 text-[#1c3a2a]" />
@@ -65,7 +65,7 @@ export default function DairyPage() {
         </div>
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-6 py-8 space-y-8">
+      <div className="px-6 py-8 space-y-8">
 
         {/* Stats bar */}
         {stats.length > 0 && (
